@@ -1,12 +1,11 @@
 import { Connection } from 'typeorm';
-import { Factory, Seed, times } from 'typeorm-seeding';
+import { Factory, Seeder, times } from 'typeorm-seeding';
 
 import { Pet } from '../../../src/api/models/Pet';
 import { User } from '../../../src/api/models/User';
 
-export class CreatePets implements Seed {
-
-    public async seed(factory: Factory, connection: Connection): Promise<any> {
+export class CreatePets implements Seeder {
+    async run(factory: Factory, connection: Connection): Promise<void> {
         const em = connection.createEntityManager();
         await times(10, async (n) => {
             const pet = await factory(Pet)().seed();
@@ -15,5 +14,4 @@ export class CreatePets implements Seed {
             return await em.save(user);
         });
     }
-
 }
