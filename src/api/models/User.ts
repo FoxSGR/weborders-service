@@ -1,66 +1,55 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-
-import { Pet } from './Pet';
+import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Client } from './Client';
 
 @Entity()
 export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    public static hashPassword(password: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            bcrypt.hash(password, 10, (err, hash) => {
-                if (err) {
-                    return reject(err);
-                }
-                resolve(hash);
-            });
-        });
-    }
+  @IsNotEmpty()
+  @Column({ name: 'first_name' })
+  firstName: string;
 
-    public static comparePassword(user: User, password: string): Promise<boolean> {
-        return new Promise((resolve, reject) => {
-            bcrypt.compare(password, user.password, (err, res) => {
-                resolve(res === true);
-            });
-        });
-    }
+  @IsNotEmpty()
+  @Column({ name: 'last_name' })
+  lastName: string;
 
-    @PrimaryColumn('uuid')
-    public id: string;
+  @IsNotEmpty()
+  @Column()
+  email: string;
 
-    @IsNotEmpty()
-    @Column({ name: 'first_name' })
-    public firstName: string;
+  @IsNotEmpty()
+  @Column()
+  username: string;
 
-    @IsNotEmpty()
-    @Column({ name: 'last_name' })
-    public lastName: string;
+  @IsNotEmpty()
+  @Column()
+  @Exclude()
+  password: string;
 
-    @IsNotEmpty()
-    @Column()
-    public email: string;
+  @OneToMany(() => Client, (client) => client.id)
+  clients: Promise<Client[]>;
 
-    @IsNotEmpty()
-    @Column()
-    @Exclude()
-    public password: string;
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    this.password = await User.hashPassword(this.password);
+  }
 
-    @IsNotEmpty()
-    @Column()
-    public username: string;
+  toString(): string {
+    return `${this.firstName} ${this.lastName} (${this.email})`;
+  }
 
-    @OneToMany(type => Pet, pet => pet.user)
-    public pets: Pet[];
-
-    public toString(): string {
-        return `${this.firstName} ${this.lastName} (${this.email})`;
-    }
-
-    @BeforeInsert()
-    public async hashPassword(): Promise<void> {
-        this.password = await User.hashPassword(this.password);
-    }
-
+  static hashPassword(password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      void bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(hash);
+      });
+    });
+  }
 }

@@ -4,7 +4,8 @@ import { Connection } from 'typeorm/connection/Connection';
 import { User } from '../../../src/api/models/User';
 
 export class CreateUsers implements Seeder {
-    async run(factory: Factory, connection: Connection): Promise<void> {
-        await factory(User)().seedMany(10);
-    }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async run(factory: Factory, connection: Connection): Promise<void> {
+    await factory(User)().createMany(10);
+  }
 }
