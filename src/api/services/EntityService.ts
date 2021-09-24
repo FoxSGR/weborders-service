@@ -1,31 +1,38 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { FindParams } from 'src/types/FindParams';
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
+import { EventDispatcherInterface } from '../../decorators/EventDispatcher';
+import { FindParams } from '../../types/FindParams';
+import { IEntity } from '../../types/IEntity';
+import { Page } from '../../types/Page';
 
 @Service()
-export abstract class EntityService<T, R extends Repository<T>> {
+export abstract class EntityService<T extends IEntity> {
   constructor(
-    @OrmRepository() protected repository: R,
-    @EventDispatcher() protected eventDispatcher: EventDispatcherInterface,
-    @Logger(__filename) protected log: LoggerInterface
+    protected repository: Repository<T>,
+    protected eventDispatcher: EventDispatcherInterface
   ) {}
 
-  find(params: FindParams<T>): Promise<T[]> {
-    return this.repository.find({
+  async find(params?: FindParams<T>): Promise<Page<T>> {
+    const entities = (
+      await this.repository.find({
+        skip: params.offset,
+        take: params.limit,
+      })
+    );
 
-    });
+    return {
+      offset: params.offset,
+      items: entities,
+      total: entities.length, // to-do
+    };
   }
 
   findOne(id: any): Promise<T | undefined> {
     return this.repository.findOne(id);
   }
 
-  async create(entity: T): Promise<T> {
-    return await this.repository.save(entity);
+  create(entity: T): Promise<T> {
+    return this.repository.save(entity);
   }
 
   update(id: any, entity: T): Promise<T> {

@@ -46,7 +46,7 @@ export class UserController {
 
   @Get()
   @ResponseSchema(UserResponse, { isArray: true })
-  public find(): Promise<User[]> {
+  public findAll(): Promise<User[]> {
     return this.userService.find();
   }
 

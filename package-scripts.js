@@ -112,7 +112,7 @@ module.exports = {
         description: 'Migrates the database to newest version available',
       },
       migration: {
-        script: series('nps config', runFast('./node_modules/typeorm/cli.js migration:generate -n Migration')),
+        script: runFast('./node_modules/typeorm/cli.js migration:generate -n'),
         description: 'Migrates the database to newest version available',
       },
       revert: {

@@ -1,5 +1,5 @@
-import { IAddress } from 'src/types/IAddress';
-import { IClient } from 'src/types/IClient';
+import { IAddress } from '../../../types/IAddress';
+import { IClient } from '../../../types/IClient';
 
 export abstract class ClientResponse implements IClient {
   id: number | string;
