@@ -44,12 +44,6 @@ class CreateUserBody extends BaseUser {
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get()
-  @ResponseSchema(UserResponse, { isArray: true })
-  public findAll(): Promise<User[]> {
-    return this.userService.find();
-  }
-
   @Get('/me')
   @ResponseSchema(UserResponse, { isArray: true })
   public findMe(@Req() req: Request): Promise<User[]> {

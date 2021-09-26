@@ -1,9 +1,10 @@
-import { Get, NotFoundError, Param, QueryParams } from 'routing-controllers';
+import { Get, JsonController, NotFoundError, Param, QueryParams } from 'routing-controllers';
 import { FindParams } from '../../types/FindParams';
 import { IEntity } from '../../types/IEntity';
 import { Page } from '../../types/Page';
 import { EntityService } from '../services/EntityService';
 
+@JsonController()
 export abstract class EntityController<T extends IEntity, U> {
   constructor(protected service: EntityService<T>) {}
 
