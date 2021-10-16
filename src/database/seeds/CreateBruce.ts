@@ -1,6 +1,5 @@
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
-import * as uuid from 'uuid';
 
 import { User } from '../../../src/api/models/User';
 

@@ -18,7 +18,7 @@ export class AuthService {
 
     if (await AuthService.comparePassword(password, user.password)) {
       return new Promise((resolve, reject) => {
-        jwt.sign({ username: user.username }, env.auth.secret, {}, (err, token) => {
+        jwt.sign({ user: user.username }, env.auth.secret, {}, (err, token) => {
           if (err) {
             return reject(err);
           }

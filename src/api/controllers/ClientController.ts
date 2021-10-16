@@ -1,9 +1,10 @@
-import { JsonController } from 'routing-controllers';
+import { Authorized, JsonController } from 'routing-controllers';
 import { IClient } from '../../types/IClient';
 import { ClientService } from '../services/ClientService';
 import { EntityController } from './EntityController';
 import { ClientResponse } from './responses';
 
+@Authorized()
 @JsonController('/client')
 export class ClientController extends EntityController<IClient, ClientResponse> {
   constructor(service: ClientService) {

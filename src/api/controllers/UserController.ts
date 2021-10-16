@@ -39,8 +39,8 @@ class CreateUserBody extends BaseUser {
 }
 
 @Authorized()
+@OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/users')
-@OpenAPI({ security: [{ basicAuth: [] }] })
 export class UserController {
   constructor(private userService: UserService) {}
 
