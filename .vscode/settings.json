@@ -7,8 +7,5 @@
   "importSorter.generalConfiguration.sortOnBeforeSave": true,
   "files.trimTrailingWhitespace": true,
   "editor.formatOnSave": false,
-  "cSpell.words": [
-    "Metadatas",
-    "Microframework"
-  ]
+  "cSpell.words": ["Metadatas", "Microframework"]
 }

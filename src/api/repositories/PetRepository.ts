@@ -1,7 +1,9 @@
+import { Service } from 'typedi';
 import { EntityRepository, Repository } from 'typeorm';
 
 import { Pet } from '../models/Pet';
 
+@Service()
 @EntityRepository(Pet)
 export class PetRepository extends Repository<Pet> {
   /**

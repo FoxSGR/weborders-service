@@ -20,7 +20,9 @@ describe('/api/users', () => {
   beforeAll(async () => {
     settings = await prepareServer({ migrate: true });
     bruce = await runSeed<User>(CreateBruce);
-    bruceAuthorization = Buffer.from(`${bruce.username}:1234`).toString('base64');
+    bruceAuthorization = Buffer.from(`${bruce.username}:1234`).toString(
+      'base64'
+    );
   });
 
   // -------------------------------------------------------------------------

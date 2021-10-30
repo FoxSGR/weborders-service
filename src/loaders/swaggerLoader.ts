@@ -2,14 +2,19 @@ import { defaultMetadataStorage as classTransformerMetadataStorage } from 'class
 import { getFromContainer, MetadataStorage } from 'class-validator';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import basicAuth from 'express-basic-auth';
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
+import {
+  MicroframeworkLoader,
+  MicroframeworkSettings,
+} from 'microframework-w3tec';
 import { getMetadataArgsStorage } from 'routing-controllers';
 import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUi from 'swagger-ui-express';
 
 import { env } from '../env';
 
-export const swaggerLoader: MicroframeworkLoader = (settings: MicroframeworkSettings | undefined) => {
+export const swaggerLoader: MicroframeworkLoader = (
+  settings: MicroframeworkSettings | undefined
+) => {
   console.log(settings);
 
   if (settings && env.swagger.enabled) {

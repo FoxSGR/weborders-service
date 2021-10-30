@@ -18,7 +18,14 @@ export interface BootstrapSettings {
 
 export const bootstrapApp = async (): Promise<BootstrapSettings> => {
   const framework = await bootstrapMicroframework({
-    loaders: [winstonLoader, iocLoader, eventDispatchLoader, typeormLoader, expressLoader, homeLoader],
+    loaders: [
+      winstonLoader,
+      iocLoader,
+      eventDispatchLoader,
+      typeormLoader,
+      expressLoader,
+      homeLoader,
+    ],
   });
   return {
     app: framework.settings.getData('express_app') as Application,

@@ -1,5 +1,8 @@
 import glob from 'glob';
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
+import {
+  MicroframeworkLoader,
+  MicroframeworkSettings,
+} from 'microframework-w3tec';
 
 import { env } from '../env';
 
@@ -9,7 +12,9 @@ import { env } from '../env';
  * This loads all the created subscribers into the project, so we do not have to
  * import them manually
  */
-export const eventDispatchLoader: MicroframeworkLoader = (settings: MicroframeworkSettings | undefined) => {
+export const eventDispatchLoader: MicroframeworkLoader = (
+  settings: MicroframeworkSettings | undefined
+) => {
   if (settings) {
     const patterns = env.app.dirs.subscribers;
     patterns.forEach((pattern) => {

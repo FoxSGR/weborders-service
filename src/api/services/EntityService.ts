@@ -1,11 +1,10 @@
-import { Service } from 'typedi';
 import { Repository } from 'typeorm';
+
 import { EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { FindParams } from '../../types/FindParams';
 import { IEntity } from '../../types/IEntity';
 import { Page } from '../../types/Page';
 
-@Service()
 export abstract class EntityService<T extends IEntity> {
   constructor(
     protected repository: Repository<T>,
@@ -13,12 +12,10 @@ export abstract class EntityService<T extends IEntity> {
   ) {}
 
   async find(params?: FindParams<T>): Promise<Page<T>> {
-    const entities = (
-      await this.repository.find({
-        skip: params.offset,
-        take: params.limit,
-      })
-    );
+    const entities = await this.repository.find({
+      skip: params.offset,
+      take: params.limit || 50,
+    });
 
     return {
       offset: params.offset,

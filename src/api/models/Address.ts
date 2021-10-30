@@ -1,6 +1,7 @@
 import { Validate } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { countries } from './countries';
+import { EntityBase } from './EntityBase';
 
 @Entity()
 export class Address {
@@ -20,6 +21,9 @@ export class Address {
   zipCode: string;
 
   @Column({ default: undefined })
-  @Validate((country: string) => !!countries[country])
+  @Validate((country: string) => (country ? !!countries[country] : true))
   country: string;
+
+  @Column(() => EntityBase, { prefix: '' })
+  base: EntityBase;
 }

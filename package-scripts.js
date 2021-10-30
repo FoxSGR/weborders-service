@@ -19,11 +19,16 @@ module.exports = {
      */
     serve: {
       inspector: {
-        script: series('nps banner.serve', 'nodemon --watch src --watch .env --inspect'),
-        description: 'Serves the current app and watches for changes to restart it, you may attach inspector to it.',
+        script: series(
+          'nps banner.serve',
+          'nodemon --watch src --watch .env --inspect'
+        ),
+        description:
+          'Serves the current app and watches for changes to restart it, you may attach inspector to it.',
       },
       script: series('nps banner.serve', 'nodemon --watch src --watch .env'),
-      description: 'Serves the current app and watches for changes to restart it',
+      description:
+        'Serves the current app and watches for changes to restart it',
     },
     /**
      * Setup of the development environment
@@ -108,7 +113,11 @@ module.exports = {
      */
     db: {
       migrate: {
-        script: series('nps banner.migrate', 'nps config', runFast('./node_modules/typeorm/cli.js migration:run')),
+        script: series(
+          'nps banner.migrate',
+          'nps config',
+          runFast('./node_modules/typeorm/cli.js migration:run')
+        ),
         description: 'Migrates the database to newest version available',
       },
       migration: {
@@ -116,11 +125,19 @@ module.exports = {
         description: 'Migrates the database to newest version available',
       },
       revert: {
-        script: series('nps banner.revert', 'nps config', runFast('./node_modules/typeorm/cli.js migration:revert')),
+        script: series(
+          'nps banner.revert',
+          'nps config',
+          runFast('./node_modules/typeorm/cli.js migration:revert')
+        ),
         description: 'Downgrades the database',
       },
       seed: {
-        script: series('nps banner.seed', 'nps config', runFast('./commands/seed.ts')),
+        script: series(
+          'nps banner.seed',
+          'nps config',
+          runFast('./commands/seed.ts')
+        ),
         description: 'Seeds generated records into the database',
       },
       drop: {
@@ -139,7 +156,11 @@ module.exports = {
       default: 'nps test.unit',
       unit: {
         default: {
-          script: series('nps banner.testUnit', 'nps test.unit.pretest', 'nps test.unit.run'),
+          script: series(
+            'nps banner.testUnit',
+            'nps test.unit.pretest',
+            'nps test.unit.run'
+          ),
           description: 'Runs the unit tests',
         },
         pretest: {
@@ -161,7 +182,11 @@ module.exports = {
       },
       integration: {
         default: {
-          script: series('nps banner.testIntegration', 'nps test.integration.pretest', 'nps test.integration.run'),
+          script: series(
+            'nps banner.testIntegration',
+            'nps test.integration.pretest',
+            'nps test.integration.run'
+          ),
           description: 'Runs the integration tests',
         },
         pretest: {
@@ -171,7 +196,8 @@ module.exports = {
         run: {
           // -i. Run all tests serially in the current process, rather than creating a worker pool of child processes that run tests.
           // This can be useful for debugging.
-          script: 'cross-env NODE_ENV=test jest --testPathPattern=integration -i',
+          script:
+            'cross-env NODE_ENV=test jest --testPathPattern=integration -i',
           hiddenFromHelp: true,
         },
         verbose: {
@@ -185,7 +211,11 @@ module.exports = {
       },
       e2e: {
         default: {
-          script: series('nps banner.testE2E', 'nps test.e2e.pretest', 'nps test.e2e.run'),
+          script: series(
+            'nps banner.testE2E',
+            'nps test.e2e.pretest',
+            'nps test.e2e.run'
+          ),
           description: 'Runs the e2e tests',
         },
         pretest: {

@@ -42,4 +42,6 @@ bootstrapMicroframework({
   ],
 })
   .then(() => banner(log))
-  .catch((error: Error) => log.error(`Application is crashed: ${error.message}\n${error.stack}`));
+  .catch((error: Error) =>
+    log.error(`Application is crashed: ${error.message}\n${error.stack}`)
+  );

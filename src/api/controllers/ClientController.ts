@@ -6,7 +6,10 @@ import { ClientResponse } from './responses';
 
 @Authorized()
 @JsonController('/client')
-export class ClientController extends EntityController<IClient, ClientResponse> {
+export class ClientController extends EntityController<
+  IClient,
+  ClientResponse
+> {
   constructor(service: ClientService) {
     super(service);
   }

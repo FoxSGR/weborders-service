@@ -1,9 +1,14 @@
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
+import {
+  MicroframeworkLoader,
+  MicroframeworkSettings,
+} from 'microframework-w3tec';
 import { createConnection, getConnectionOptions } from 'typeorm';
 
 import { env } from '../env';
 
-export const typeormLoader: MicroframeworkLoader = async (settings: MicroframeworkSettings | undefined) => {
+export const typeormLoader: MicroframeworkLoader = async (
+  settings: MicroframeworkSettings | undefined
+) => {
   const loadedConnectionOptions = await getConnectionOptions();
 
   const connectionOptions = Object.assign(loadedConnectionOptions, {

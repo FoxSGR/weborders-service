@@ -1,11 +1,20 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
-import { BeforeInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+import { IUser } from '../../types/IUser';
 import { Client } from './Client';
+import { EntityBase } from './EntityBase';
 
 @Entity()
-export class User {
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -29,6 +38,9 @@ export class User {
   @Column()
   @Exclude()
   password: string;
+
+  @Column(() => EntityBase, { prefix: '' })
+  base: EntityBase;
 
   @OneToMany(() => Client, (client) => client.id)
   clients: Promise<Client[]>;

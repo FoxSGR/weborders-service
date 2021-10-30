@@ -1,12 +1,17 @@
 import { Application } from 'express';
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
+import {
+  MicroframeworkLoader,
+  MicroframeworkSettings,
+} from 'microframework-w3tec';
 import { createExpressServer } from 'routing-controllers';
 
 import { authorizationChecker } from '../auth/authorizationChecker';
 import { currentUserChecker } from '../auth/currentUserChecker';
 import { env } from '../env';
 
-export const expressLoader: MicroframeworkLoader = (settings: MicroframeworkSettings | undefined) => {
+export const expressLoader: MicroframeworkLoader = (
+  settings: MicroframeworkSettings | undefined
+) => {
   if (settings) {
     const connection = settings.getData('connection');
 

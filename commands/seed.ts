@@ -21,7 +21,10 @@ const run = async () => {
 
   // run the seeds
   for (const seed of Object.values(seeds)) {
-    log(chalk.gray.underline(`executing seed:  `), chalk.green.bold(`${seed.name}`));
+    log(
+      chalk.gray.underline(`executing seed:  `),
+      chalk.green.bold(`${seed.name}`)
+    );
     await runSeeder(seed);
   }
 

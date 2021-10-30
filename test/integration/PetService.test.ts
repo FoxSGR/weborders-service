@@ -3,7 +3,11 @@ import { Connection } from 'typeorm';
 
 import { Pet } from '../../src/api/models/Pet';
 import { PetService } from '../../src/api/services/PetService';
-import { closeDatabase, createDatabaseConnection, migrateDatabase } from '../utils/database';
+import {
+  closeDatabase,
+  createDatabaseConnection,
+  migrateDatabase,
+} from '../utils/database';
 import { configureLogger } from '../utils/logger';
 
 describe('PetService', () => {

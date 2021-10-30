@@ -354,7 +354,10 @@ To deal with relations you can use the entity manager like this.
 
 ```typescript
 export class CreatePets implements SeedsInterface {
-  public async seed(factory: FactoryInterface, connection: Connection): Promise<any> {
+  public async seed(
+    factory: FactoryInterface,
+    connection: Connection
+  ): Promise<any> {
     const connection = await factory.getConnection();
     const em = connection.createEntityManager();
 

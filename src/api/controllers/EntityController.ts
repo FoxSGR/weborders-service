@@ -1,4 +1,10 @@
-import { Get, JsonController, NotFoundError, Param, QueryParams } from 'routing-controllers';
+import {
+  Get,
+  JsonController,
+  NotFoundError,
+  Param,
+  QueryParams,
+} from 'routing-controllers';
 import { FindParams } from '../../types/FindParams';
 import { IEntity } from '../../types/IEntity';
 import { Page } from '../../types/Page';
@@ -6,7 +12,7 @@ import { EntityService } from '../services/EntityService';
 
 @JsonController()
 export abstract class EntityController<T extends IEntity, U> {
-  constructor(protected service: EntityService<T>) {}
+  protected constructor(protected service: EntityService<T>) {}
 
   @Get('/:id')
   async findOne(@Param('id') id: string): Promise<U> {
@@ -27,5 +33,5 @@ export abstract class EntityController<T extends IEntity, U> {
     };
   }
 
-  abstract toResponse(entity: T): U;
+  protected abstract toResponse(entity: T): U;
 }

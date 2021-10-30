@@ -1,1 +1,5 @@
-export interface IEntity {}
+export interface IEntity {
+  removed?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}

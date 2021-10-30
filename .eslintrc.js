@@ -51,7 +51,8 @@ module.exports = {
             message: 'Avoid using the `Object` type. Did you mean `object`?',
           },
           Function: {
-            message: 'Avoid using the `Function` type. Prefer a specific function type, like `() => void`.',
+            message:
+              'Avoid using the `Function` type. Prefer a specific function type, like `() => void`.',
           },
           Boolean: {
             message: 'Avoid using the `Boolean` type. Did you mean `boolean`?',
@@ -194,7 +195,14 @@ module.exports = {
         rules: {
           'import-spacing': true,
           typedef: [true, 'call-signature', 'parameter'],
-          whitespace: [true, 'check-branch', 'check-decl', 'check-operator', 'check-separator', 'check-type'],
+          whitespace: [
+            true,
+            'check-branch',
+            'check-decl',
+            'check-operator',
+            'check-separator',
+            'check-type',
+          ],
         },
       },
     ],

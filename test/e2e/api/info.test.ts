@@ -16,7 +16,10 @@ describe('/api', () => {
   // -------------------------------------------------------------------------
 
   test('GET: / should return the api-version', async (done) => {
-    const response = await request(settings.app).get('/api').expect('Content-Type', /json/).expect(200);
+    const response = await request(settings.app)
+      .get('/api')
+      .expect('Content-Type', /json/)
+      .expect(200);
 
     expect(response.body.version).toBe(env.app.version);
     done();

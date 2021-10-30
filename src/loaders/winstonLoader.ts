@@ -1,10 +1,15 @@
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
+import {
+  MicroframeworkLoader,
+  MicroframeworkSettings,
+} from 'microframework-w3tec';
 import { configure, format, transports } from 'winston';
 
 import { env } from '../env';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const winstonLoader: MicroframeworkLoader = (settings: MicroframeworkSettings | undefined) => {
+export const winstonLoader: MicroframeworkLoader = (
+  settings: MicroframeworkSettings | undefined
+) => {
   configure({
     transports: [
       new transports.Console({
