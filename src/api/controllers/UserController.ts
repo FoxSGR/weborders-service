@@ -4,15 +4,16 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { User } from '../models/User';
 import { UserService } from '../services/UserService';
-import { EntityController } from './EntityController';
-import { UserResponse } from './responses/UserResponse';
+import { EntityController } from './base/EntityController';
+import { UserResponse } from './responses';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/user')
 export class UserController extends EntityController<User, UserResponse> {
   constructor(service: UserService) {
-    super(service);
+    super();
+    this.service = service;
   }
 
   @Get('/me')

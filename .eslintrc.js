@@ -28,7 +28,6 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: [
-    'eslint-plugin-no-null',
     'eslint-plugin-import',
     'eslint-plugin-jsdoc',
     'eslint-plugin-prefer-arrow',
@@ -91,6 +90,7 @@ module.exports = {
       },
     ],
     '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
@@ -165,7 +165,6 @@ module.exports = {
     'no-fallthrough': 'error',
     'no-invalid-this': 'off',
     'no-new-wrappers': 'error',
-    'no-null/no-null': 'error',
     'no-redeclare': 'error',
     'no-shadow': 'error',
     'no-throw-literal': 'error',

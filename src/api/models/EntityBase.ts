@@ -1,7 +1,6 @@
 import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { IEntity } from '../../types/IEntity';
 
-export class EntityBase implements IEntity {
+export class EntityBase {
   @Column({
     default: false,
   })

@@ -1,10 +1,11 @@
 import { Body, JsonController, Post } from 'routing-controllers';
-import { ResponseSchema } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { AuthService } from '../services/AuthService';
 import { LoginBody } from './requests';
 import { LoginResponse } from './responses';
 
 @JsonController('/auth')
+@OpenAPI({})
 export class AuthController {
   constructor(private authService: AuthService) {}
 

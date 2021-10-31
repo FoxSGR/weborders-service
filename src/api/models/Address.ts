@@ -8,19 +8,19 @@ export class Address {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: undefined })
+  @Column({ default: null })
   line1: string;
 
-  @Column({ default: undefined })
+  @Column({ default: null })
   line2: string;
 
-  @Column({ default: undefined })
+  @Column({ default: null })
   city: string;
 
-  @Column({ default: undefined })
+  @Column({ default: null })
   zipCode: string;
 
-  @Column({ default: undefined })
+  @Column({ default: null })
   @Validate((country: string) => (country ? !!countries[country] : true))
   country: string;
 

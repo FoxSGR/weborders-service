@@ -1,6 +1,9 @@
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
-import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from '../../decorators/EventDispatcher';
 import { Client } from '../models/Client';
 import { ClientRepository } from '../repositories/ClientRepository';
 import { EntityService } from './EntityService';

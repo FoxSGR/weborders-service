@@ -6,7 +6,7 @@ import { IEntity } from '../../types/IEntity';
 import { Page } from '../../types/Page';
 
 export abstract class EntityService<T extends IEntity> {
-  constructor(
+  protected constructor(
     protected repository: Repository<T>,
     protected eventDispatcher: EventDispatcherInterface
   ) {}

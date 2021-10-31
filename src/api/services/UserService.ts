@@ -1,7 +1,10 @@
 import { Service } from 'typedi';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 
-import { EventDispatcher, EventDispatcherInterface } from '../../decorators/EventDispatcher';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from '../../decorators/EventDispatcher';
 import { User } from '../models/User';
 import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';

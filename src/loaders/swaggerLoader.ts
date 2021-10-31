@@ -1,5 +1,4 @@
-import { defaultMetadataStorage as classTransformerMetadataStorage } from 'class-transformer/storage';
-import { getFromContainer, MetadataStorage } from 'class-validator';
+import { defaultMetadataStorage as classTransformerMetadataStorage } from 'class-transformer/cjs/MetadataStorage';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import basicAuth from 'express-basic-auth';
 import {
@@ -15,14 +14,10 @@ import { env } from '../env';
 export const swaggerLoader: MicroframeworkLoader = (
   settings: MicroframeworkSettings | undefined
 ) => {
-  console.log(settings);
-
   if (settings && env.swagger.enabled) {
     const expressApp = settings.getData('express_app');
 
-    const { validationMetadatas } = getFromContainer(MetadataStorage) as any;
-
-    const schemas = validationMetadatasToSchemas(validationMetadatas, {
+    const schemas: any = validationMetadatasToSchemas({
       classTransformerMetadataStorage,
       refPointerPrefix: '#/components/schemas/',
     });
@@ -55,6 +50,7 @@ export const swaggerLoader: MicroframeworkLoader = (
         url: `${env.app.schema}://${env.app.host}:${env.app.port}${env.app.routePrefix}`,
       },
     ];
+    console.log(swaggerFile);
 
     expressApp.use(
       env.swagger.route,

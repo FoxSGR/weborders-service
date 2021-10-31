@@ -1,5 +1,9 @@
 import * as express from 'express';
-import { ExpressErrorMiddlewareInterface, HttpError, Middleware } from 'routing-controllers';
+import {
+  ExpressErrorMiddlewareInterface,
+  HttpError,
+  Middleware,
+} from 'routing-controllers';
 
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { env } from '../../env';
@@ -17,7 +21,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     res: express.Response,
     next: express.NextFunction
   ): void {
-    console.log(error)
+    console.log(error);
     res.status(error.httpCode || 500);
     res.json({
       name: error.name,

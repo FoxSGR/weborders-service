@@ -1,5 +1,9 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Action, InternalServerError, UnauthorizedError } from 'routing-controllers';
+import {
+  Action,
+  InternalServerError,
+  UnauthorizedError,
+} from 'routing-controllers';
 import Container from 'typedi';
 import { Connection } from 'typeorm';
 

@@ -1,21 +1,20 @@
 import * as bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
-import { InjectRepository } from 'typeorm-typedi-extensions';
 
 import { env } from '../../env';
 import { User } from '../models/User';
-import { UserRepository } from '../repositories/UserRepository';
+import { UserService } from './UserService';
 
 @Service()
 export class AuthService {
-  constructor(@InjectRepository() private userRepository: UserRepository) {}
+  constructor(private userService: UserService) {}
 
   async login(
     username: string,
     password: string
   ): Promise<{ user: User; token: string } | undefined> {
-    const user = await this.userRepository.findOne({ where: { username } });
+    const user = await this.userService.findByUsername(username);
     if (!user) {
       return undefined;
     }
@@ -26,7 +25,7 @@ export class AuthService {
           { user: user.username },
           env.auth.secret,
           {
-            expiresIn: '2d',
+            expiresIn: '1h',
           },
           (err, token) => {
             if (err) {
