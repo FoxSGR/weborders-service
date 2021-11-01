@@ -50,7 +50,6 @@ export const swaggerLoader: MicroframeworkLoader = (
         url: `${env.app.schema}://${env.app.host}:${env.app.port}${env.app.routePrefix}`,
       },
     ];
-    console.log(swaggerFile);
 
     expressApp.use(
       env.swagger.route,

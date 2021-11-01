@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 import { IClient } from '../../types/IClient';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Address } from './Address';
-import { EntityBase } from './EntityBase';
+import { OwnedEntity } from './base/OwnedEntity';
 
 @Entity()
 export class Client implements IClient {
@@ -13,15 +13,16 @@ export class Client implements IClient {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: null })
   phoneNumber: string;
 
   @Column()
+  @Column({ default: null })
   vat: string;
 
   @OneToOne(() => Address, { cascade: true })
   address: Address;
 
-  @Column(() => EntityBase, { prefix: '' })
-  base: EntityBase;
+  @Column(() => OwnedEntity, { prefix: '' })
+  base: OwnedEntity;
 }

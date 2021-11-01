@@ -26,6 +26,7 @@ export class ClientController extends EntityController<
       name: client.name,
       phoneNumber: client.phoneNumber,
       vat: client.vat,
+      ...this.transformBase(client['base']),
     };
   }
 }

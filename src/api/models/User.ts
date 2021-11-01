@@ -11,7 +11,7 @@ import {
 
 import { IUser } from '../../types/IUser';
 import { Client } from './Client';
-import { EntityBase } from './EntityBase';
+import { EntityBase } from './base/EntityBase';
 
 @Entity()
 export class User implements IUser {

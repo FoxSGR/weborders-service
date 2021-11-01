@@ -1,10 +1,11 @@
 import { Validate } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { countries } from './countries';
-import { EntityBase } from './EntityBase';
+import { EntityBase } from './base/EntityBase';
+import { IAddress } from '../../types/IAddress';
 
 @Entity()
-export class Address {
+export class Address implements IAddress {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,3 +1,5 @@
+### Login
+
 POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
@@ -8,7 +10,17 @@ Content-Type: application/json
 
 > {% client.global.set("auth_token", response.body.token); %}
 
-###
+### Me
 
 GET http://localhost:3000/api/user/me
 Authorization: Bearer {{auth_token}}
+
+### Create a client
+
+POST http://localhost:3000/api/client
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Test"
+}

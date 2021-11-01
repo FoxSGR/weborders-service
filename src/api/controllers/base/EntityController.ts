@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  CurrentUser,
   Get,
   MethodNotAllowedError,
   NotFoundError,
@@ -12,6 +13,7 @@ import { FindParams } from '../../../types/FindParams';
 import { IEntity } from '../../../types/IEntity';
 import { Page } from '../../../types/Page';
 import { EntityService } from '../../services/EntityService';
+import { IUser } from '../../../types/IUser';
 
 interface EntityControllerConfig {
   create?: boolean;
@@ -57,16 +59,31 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
   }
 
   @Post()
-  public async create(@Body({ required: true }) body: B): Promise<U> {
+  public async create(
+    @CurrentUser() user: IUser,
+    @Body({ required: true }) body: B
+  ): Promise<U> {
     if (!this.config.create) {
       throw new MethodNotAllowedError();
     }
 
-    const entity = await this.service.create(this.bodyToEntity(body));
+    let entity = this.bodyToEntity(body);
+    entity['base'] = { owner: user };
+    entity = await this.service.create(this.bodyToEntity(body));
     return this.toResponse(entity);
   }
 
   protected abstract toResponse(entity: T): U;
+
+  protected transformBase(base: any): any {
+    const owner = base.owner;
+    delete base.owner;
+    return {
+      ...base,
+      owner: owner.id,
+    };
+  }
+
   protected bodyToEntity(body: B): T {
     return body as any as T;
   }
