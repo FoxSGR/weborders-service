@@ -1,34 +1,47 @@
-import { Request } from 'express';
-import { Authorized, Get, JsonController, Req } from 'routing-controllers';
+import {
+  Authorized,
+  CurrentUser,
+  Get,
+  JsonController,
+} from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
-import { User } from '../models/User';
 import { UserService } from '../services/UserService';
 import { EntityController } from './base/EntityController';
 import { UserResponse } from './responses';
+import { IUser } from '../../types/IUser';
+import { UserMapper } from '../transformers/UserMapper';
+import { hasPermission } from '../../types/roles';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/user')
-export class UserController extends EntityController<User, UserResponse> {
+export class UserController extends EntityController<IUser, UserResponse> {
   constructor(service: UserService) {
     super();
     this.service = service;
+    this.mapper = new UserMapper();
   }
 
   @Get('/me')
   @ResponseSchema(UserResponse, { isArray: true })
-  public findMe(@Req() req: Request): Promise<User[]> {
-    return req['user'];
+  public findMe(@CurrentUser() user: IUser): UserResponse {
+    return this.toResponse(user);
   }
 
-  protected toResponse(entity: User): UserResponse {
-    return {
-      id: entity.id,
-      email: entity.email,
-      username: entity.username,
-      firstName: entity.firstName,
-      lastName: entity.lastName,
-    };
+  protected hasPermission(
+    user: IUser,
+    type: 'findOne' | 'findAll' | 'create' | 'update' | 'delete',
+    id?: any
+  ): boolean {
+    if (user.id === id && type === 'delete') {
+      return false;
+    }
+
+    if (user.id === id) {
+      return true;
+    }
+
+    return hasPermission(user.roles, 'users.manage');
   }
 }

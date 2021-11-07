@@ -16,7 +16,7 @@ export class UserService extends EntityService<User> {
     @InjectRepository() repository: UserRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher);
+    super(repository, eventDispatcher, { owned: false });
   }
 
   async create(user: User): Promise<User> {

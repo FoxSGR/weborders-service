@@ -1,10 +1,8 @@
-import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
 
 export class EntityBase {
-  @Column({
-    default: false,
-  })
-  removed: boolean;
+  @DeleteDateColumn({ type: 'timestamp', default: null })
+  deletedAt: Date;
 
   @CreateDateColumn({
     type: 'timestamp',

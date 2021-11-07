@@ -16,7 +16,6 @@ export class Client implements IClient {
   @Column({ default: null })
   phoneNumber: string;
 
-  @Column()
   @Column({ default: null })
   vat: string;
 

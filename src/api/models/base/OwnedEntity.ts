@@ -3,6 +3,6 @@ import { User } from '../User';
 import { EntityBase } from './EntityBase';
 
 export class OwnedEntity extends EntityBase {
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { cascade: false })
   owner: User;
 }

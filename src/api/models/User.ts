@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { Exclude } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsArray, IsNotEmpty, Validate, ValidateNested } from 'class-validator';
 import {
   BeforeInsert,
   Column,
@@ -12,6 +12,7 @@ import {
 import { IUser } from '../../types/IUser';
 import { Client } from './Client';
 import { EntityBase } from './base/EntityBase';
+import { Role, roles } from '../../types/roles';
 
 @Entity()
 export class User implements IUser {
@@ -38,6 +39,13 @@ export class User implements IUser {
   @Column()
   @Exclude()
   password: string;
+
+  @Column({ type: 'simple-json' })
+  @IsNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Validate((role) => !!roles[role])
+  roles: Role[];
 
   @Column(() => EntityBase, { prefix: '' })
   base: EntityBase;

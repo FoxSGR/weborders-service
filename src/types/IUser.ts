@@ -1,4 +1,5 @@
 import { IEntity } from './IEntity';
+import { Role } from './roles';
 
 export interface IUser extends IEntity {
   id: number;
@@ -6,4 +7,5 @@ export interface IUser extends IEntity {
   lastName: string;
   email: string;
   username: string;
+  roles: Role[];
 }
