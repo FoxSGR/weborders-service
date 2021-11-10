@@ -1,7 +1,7 @@
-import { IAddress, IClient } from '../../../types';
+import { IAddress, IClient, Id } from '../../../types';
 
 export abstract class ClientResponse implements Partial<IClient> {
-  id: number;
+  id: Id;
   name: string;
   phoneNumber: string;
   vat: string;

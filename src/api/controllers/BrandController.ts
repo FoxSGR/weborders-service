@@ -1,4 +1,3 @@
-import { getRepository } from 'typeorm';
 import { Authorized, JsonController } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
@@ -7,12 +6,7 @@ import { IBrand } from '../../types';
 import { BrandResponse } from './responses/BrandResponse';
 import { BrandBody } from './requests/BrandBody';
 import { BrandMapper } from '../transformers/BrandMapper';
-import { EntityService } from '../services/EntityService';
-import { Brand } from '../models/Brand';
-import {
-  EventDispatcher,
-  EventDispatcherInterface,
-} from '../../decorators/EventDispatcher';
+import { BrandService } from '../services/BrandService';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -22,9 +16,9 @@ export class BrandController extends EntityController<
   BrandResponse,
   BrandBody
 > {
-  constructor(@EventDispatcher() eventDispatcher: EventDispatcherInterface) {
+  constructor(service: BrandService) {
     super();
     this.mapper = new BrandMapper();
-    this.service = new EntityService(getRepository(Brand), eventDispatcher);
+    this.service = service;
   }
 }

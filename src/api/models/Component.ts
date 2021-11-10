@@ -23,7 +23,7 @@ export class Component implements IComponent {
   @Column({ default: null })
   amount?: number;
 
-  @ManyToOne(() => Color, { cascade: true })
+  @ManyToOne(() => Color, { cascade: true, nullable: true })
   color?: Color;
 
   @Column(() => OwnedEntity, { prefix: '' })

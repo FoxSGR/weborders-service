@@ -1,19 +1,12 @@
-import { getRepository } from 'typeorm';
 import { Authorized, JsonController } from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
-import {
-  EventDispatcher,
-  EventDispatcherInterface,
-} from '../../decorators/EventDispatcher';
 import { EntityController } from './base/EntityController';
 import { IColor, IComponent, IUser } from '../../types';
 import { ComponentResponse } from './responses/ComponentResponse';
 import { ComponentBody } from './requests/ComponentBody';
 import { ComponentMapper } from '../transformers/ComponentMapper';
-import { EntityService } from '../services/EntityService';
-import { Component } from '../models/Component';
-import { ColorService } from '../services/ColorService';
+import { ColorService, ComponentService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -23,26 +16,27 @@ export class ComponentController extends EntityController<
   ComponentResponse,
   ComponentBody
 > {
-  constructor(
-    private colorService: ColorService,
-    @EventDispatcher() eventDispatcher: EventDispatcherInterface
-  ) {
+  constructor(service: ComponentService, private colorService: ColorService) {
     super();
+    this.service = service;
     this.mapper = new ComponentMapper();
-    this.service = new EntityService(getRepository(Component), eventDispatcher);
   }
 
-  protected async bodyToEntity(
+  protected async;
+
+  async bodyToEntity(
     user: IUser,
     body: ComponentBody
   ): Promise<Partial<IComponent>> {
     let color: IColor;
     if (body.color) {
-      color = await this.colorService.findOne(body.color, user);
+      color = await this.colorService.findOne(body.color, user, true);
     }
 
     return {
-      ...body,
+      name: body.name,
+      type: body.type,
+      amount: body.amount,
       color,
     };
   }

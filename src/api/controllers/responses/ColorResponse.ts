@@ -1,7 +1,7 @@
-import { IColor } from '../../../types';
+import { IColor, Id } from '../../../types';
 
 export class ColorResponse implements IColor {
-  id: number;
+  id: Id;
   name: string;
   red: number;
   green: number;

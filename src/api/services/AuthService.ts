@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Service } from 'typedi';
 
 import { env } from '../../env';
-import { User } from '../models/User';
+import { User } from '../models';
 import { UserService } from './UserService';
 
 @Service()

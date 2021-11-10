@@ -17,7 +17,7 @@ describe('UserService', () => {
     user.email = 'john.doe@test.com';
     repo.list = [user];
     const userService = new UserService(repo as any, ed as any, log);
-    const list = await userService.find();
+    const list = await userService.findPage();
     expect(list[0].firstName).toBe(user.firstName);
     done();
   });

@@ -12,7 +12,7 @@ import {
   QueryParams,
 } from 'routing-controllers';
 import { FindParams, Id, IEntity, IUser, Page } from '../../../types';
-import { EntityService } from '../../services/EntityService';
+import { EntityService } from '../../services';
 import { Mapper } from '../../transformers/Mapper';
 
 interface EntityControllerConfig {
@@ -63,7 +63,7 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
   @Get()
   public async find(
     @CurrentUser() user: IUser,
-    @QueryParams() params?: FindParams<T>
+    @QueryParams() params: FindParams<T> = { owner: user }
   ): Promise<Page<U>> {
     if (!this.hasPermission(user, 'findAll')) {
       throw new ForbiddenError();
@@ -71,7 +71,7 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
 
     params.owner = user;
 
-    const page = await this.service.find(params);
+    const page = await this.service.findPage(params);
     return {
       ...page,
       items: page.items.map((entity) => this.toResponse(entity)),

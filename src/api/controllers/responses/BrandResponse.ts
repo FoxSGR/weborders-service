@@ -1,4 +1,6 @@
+import { Id } from '../../../types';
+
 export class BrandResponse {
-  id: number;
+  id: Id;
   name: string;
 }

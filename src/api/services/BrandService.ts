@@ -5,16 +5,16 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from '../../decorators/EventDispatcher';
-import { ColorRepository } from '../repositories/ColorRepository';
+import { BrandRepository } from '../repositories/BrandRepository';
 import { EntityService } from './EntityService';
-import { Color } from '../models';
+import { Brand } from '../models';
 
 @Service()
-export class ColorService extends EntityService<Color> {
+export class BrandService extends EntityService<Brand> {
   constructor(
-    @InjectRepository() repository: ColorRepository,
+    @InjectRepository() repository: BrandRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher, { name: 'color' });
+    super(repository, eventDispatcher, { name: 'brand' });
   }
 }

@@ -1,6 +1,6 @@
 import { Body, JsonController, Post } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
-import { AuthService } from '../services/AuthService';
+import { AuthService } from '../services';
 import { LoginBody } from './requests/LoginBody';
 import { LoginResponse } from './responses/LoginResponse';
 import { UserMapper } from '../transformers/UserMapper';

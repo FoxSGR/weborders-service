@@ -5,7 +5,7 @@ import {
   EventDispatcher,
   EventDispatcherInterface,
 } from '../../decorators/EventDispatcher';
-import { User } from '../models/User';
+import { User } from '../models';
 import { UserRepository } from '../repositories/UserRepository';
 import { events } from '../subscribers/events';
 import { EntityService } from './EntityService';
@@ -16,7 +16,7 @@ export class UserService extends EntityService<User> {
     @InjectRepository() repository: UserRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher, { owned: false });
+    super(repository, eventDispatcher, { name: 'user', owned: false });
   }
 
   async create(user: User): Promise<User> {
