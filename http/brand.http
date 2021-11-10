@@ -16,59 +16,62 @@ Content-Type: application/json
   client.global.set("auth_token", response.body.token);
 %}
 
-### Create a client
+### Create a brand
 
-POST {{api}}/client
+POST {{api}}/brand
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "Test"
+  "name": "Test",
+  "red": 100,
+  "green": 100,
+  "blue": 100
 }
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.global.set('client', response.body.id);
+  client.global.set('brand', response.body.id);
 %}
 
-### Get the created client
+### Get the created brand
 
-GET {{api}}/client/{{client}}
+GET {{api}}/brand/{{brand}}
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client id is right", function() {
-    client.assert(Number(response.body.id) === Number(client.global.get('client')));
+  client.test("Brand id is right", function() {
+    client.assert(Number(response.body.id) === Number(client.global.get('brand')));
   });
 %}
 
-### Get all clients
+### Get all brands
 
-GET {{api}}/client
+GET {{api}}/brand
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client is in response", function() {
+  client.test("Brand is in response", function() {
     client.assert(response.body.items.filter(function(item) {
-      return Number(item.id) === Number(client.global.get('client'))
+      return Number(item.id) === Number(client.global.get('brand'))
     }).length === 1);
   });
-  client.test("Client is first item", function() {
-    client.assert(Number(response.body.items[0].id) === Number(client.global.get('client')));
+  client.test("Brand is first item", function() {
+    client.assert(Number(response.body.items[0].id) === Number(client.global.get('brand')));
   });
 %}
 
-### Delete the created client
+### Delete the created brand
 
-DELETE {{api}}/client/{{client}}
+DELETE {{api}}/brand/{{brand}}
 Authorization: Bearer {{auth_token}}
 
 > {%
@@ -77,9 +80,9 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Get the deleted client
+### Get the deleted brand
 
-GET {{api}}/client/{{client}}
+GET {{api}}/brand/{{brand}}
 Authorization: Bearer {{auth_token}}
 
 > {%

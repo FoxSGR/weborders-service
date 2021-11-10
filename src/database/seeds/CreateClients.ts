@@ -7,7 +7,7 @@ export class CreateClients implements Seeder {
     const em = connection.createEntityManager();
     await times(10, async () => {
       const client = await factory(Client)().make();
-      return await em.save(client);
+      return em.save(client);
     });
   }
 }

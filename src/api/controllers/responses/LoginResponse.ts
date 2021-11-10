@@ -1,10 +1,10 @@
 import { IsNotEmpty } from 'class-validator';
-import { IUser } from '../../../types/IUser';
+import { UserResponse } from './UserResponse';
 
 export abstract class LoginResponse {
   @IsNotEmpty()
   token: string;
 
   @IsNotEmpty()
-  user: IUser;
+  user: UserResponse;
 }

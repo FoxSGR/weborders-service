@@ -16,9 +16,20 @@ Content-Type: application/json
   client.global.set("auth_token", response.body.token);
 %}
 
-### Create a client
+### Create a component with a color
 
-POST {{api}}/client
+POST {{api}}/component
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "color": 1
+}
+
+### Create a component without a color
+
+POST {{api}}/component
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -30,45 +41,45 @@ Content-Type: application/json
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.global.set('client', response.body.id);
+  client.global.set('component', response.body.id);
 %}
 
-### Get the created client
+### Get the created component
 
-GET {{api}}/client/{{client}}
+GET {{api}}/component/{{component}}
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client id is right", function() {
-    client.assert(Number(response.body.id) === Number(client.global.get('client')));
+  client.test("Component id is right", function() {
+    client.assert(Number(response.body.id) === Number(client.global.get('component')));
   });
 %}
 
-### Get all clients
+### Get all components
 
-GET {{api}}/client
+GET {{api}}/component
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client is in response", function() {
+  client.test("Component is in response", function() {
     client.assert(response.body.items.filter(function(item) {
-      return Number(item.id) === Number(client.global.get('client'))
+      return Number(item.id) === Number(client.global.get('component'))
     }).length === 1);
   });
-  client.test("Client is first item", function() {
-    client.assert(Number(response.body.items[0].id) === Number(client.global.get('client')));
+  client.test("Component is first item", function() {
+    client.assert(Number(response.body.items[0].id) === Number(client.global.get('component')));
   });
 %}
 
-### Delete the created client
+### Delete the created component
 
-DELETE {{api}}/client/{{client}}
+DELETE {{api}}/component/{{component}}
 Authorization: Bearer {{auth_token}}
 
 > {%
@@ -77,9 +88,9 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Get the deleted client
+### Get the deleted component
 
-GET {{api}}/client/{{client}}
+GET {{api}}/component/{{component}}
 Authorization: Bearer {{auth_token}}
 
 > {%

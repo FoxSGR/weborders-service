@@ -1,12 +1,18 @@
+import { getRepository } from 'typeorm';
 import { Authorized, JsonController } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
 
-import { IClient } from '../../types/IClient';
-import { ClientService } from '../services/ClientService';
+import { OpenAPI } from 'routing-controllers-openapi';
+import { IClient } from '../../types';
 import { EntityController } from './base/EntityController';
-import { ClientResponse } from './responses';
-import { ClientBody } from './requests';
+import { ClientResponse } from './responses/ClientResponse';
+import { ClientBody } from './requests/ClientBody';
 import { ClientMapper } from '../transformers/ClientMapper';
+import { EntityService } from '../services/EntityService';
+import { Client } from '../models/Client';
+import {
+  EventDispatcher,
+  EventDispatcherInterface,
+} from '../../decorators/EventDispatcher';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -16,9 +22,11 @@ export class ClientController extends EntityController<
   ClientResponse,
   ClientBody
 > {
-  constructor(service: ClientService) {
+  constructor(
+    @EventDispatcher() protected eventDispatcher: EventDispatcherInterface
+  ) {
     super();
-    this.service = service;
     this.mapper = new ClientMapper();
+    this.service = new EntityService(getRepository(Client), eventDispatcher);
   }
 }

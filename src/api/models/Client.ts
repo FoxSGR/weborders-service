@@ -1,6 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
-import { IClient } from '../../types/IClient';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+
+import { IClient } from '../../types';
 import { Address } from './Address';
 import { OwnedEntity } from './base/OwnedEntity';
 

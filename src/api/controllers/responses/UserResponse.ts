@@ -1,5 +1,4 @@
-import { IUser } from '../../../types/IUser';
-import { Role } from '../../../types/roles';
+import { IUser, Role } from '../../../types';
 
 export class UserResponse implements Partial<IUser> {
   id: number;

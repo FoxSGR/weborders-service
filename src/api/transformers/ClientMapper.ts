@@ -1,6 +1,6 @@
 import { Mapper } from './Mapper';
-import { IClient } from '../../types/IClient';
-import { ClientResponse } from '../controllers/responses';
+import { IClient } from '../../types';
+import { ClientResponse } from '../controllers/responses/ClientResponse';
 
 export class ClientMapper implements Mapper<IClient, ClientResponse> {
   toResponse(client: IClient): ClientResponse {

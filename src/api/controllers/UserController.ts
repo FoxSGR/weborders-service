@@ -8,10 +8,9 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { UserService } from '../services/UserService';
 import { EntityController } from './base/EntityController';
-import { UserResponse } from './responses';
-import { IUser } from '../../types/IUser';
+import { UserResponse } from './responses/UserResponse';
 import { UserMapper } from '../transformers/UserMapper';
-import { hasPermission } from '../../types/roles';
+import { hasPermission, IUser } from '../../types';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })

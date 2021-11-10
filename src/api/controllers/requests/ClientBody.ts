@@ -6,8 +6,7 @@ import {
   Validate,
   ValidateNested,
 } from 'class-validator';
-import { IClient } from '../../../types/IClient';
-import { IAddress } from '../../../types/IAddress';
+import { IAddress, IClient } from '../../../types';
 import { DeepPartial } from 'typeorm';
 import { countries } from '../../models/countries';
 

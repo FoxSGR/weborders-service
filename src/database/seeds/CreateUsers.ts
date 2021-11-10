@@ -1,7 +1,7 @@
 import { Factory, Seeder } from 'typeorm-seeding';
 import { Connection } from 'typeorm/connection/Connection';
 
-import { User } from '../../../src/api/models/User';
+import { User } from '../../api/models/User';
 
 export class CreateUsers implements Seeder {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

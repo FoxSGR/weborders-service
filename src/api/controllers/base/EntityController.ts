@@ -11,11 +11,8 @@ import {
   Post,
   QueryParams,
 } from 'routing-controllers';
-import { FindParams } from '../../../types/FindParams';
-import { IEntity } from '../../../types/IEntity';
-import { Page } from '../../../types/Page';
+import { FindParams, Id, IEntity, IUser, Page } from '../../../types';
 import { EntityService } from '../../services/EntityService';
-import { IUser } from '../../../types/IUser';
 import { Mapper } from '../../transformers/Mapper';
 
 interface EntityControllerConfig {
@@ -38,16 +35,18 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
   set config(value: EntityControllerConfig) {
     this._config = { ...defaultConfig, ...value };
   }
+
   get config(): EntityControllerConfig {
     return this._config;
   }
+
   private _config = defaultConfig;
 
   @Get('/:id([0-9]+)')
   @OnUndefined(404)
   public async findOne(
     @CurrentUser() user: IUser,
-    @Param('id') id: string
+    @Param('id') id: Id
   ): Promise<U | undefined> {
     if (!this.hasPermission(user, 'findOne', id)) {
       throw new ForbiddenError();
@@ -90,14 +89,18 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
       throw new ForbiddenError();
     }
 
-    const entity = await this.service.create(this.bodyToEntity(body), user);
+    const entity = await this.service.create(
+      await this.bodyToEntity(user, body),
+      user
+    );
+
     return this.toResponse(entity);
   }
 
   @Delete('/:id')
   public async delete(
     @CurrentUser() user: IUser,
-    @Param('id') id: string
+    @Param('id') id: Id
   ): Promise<U> {
     if (!this.config.delete) {
       throw new MethodNotAllowedError();
@@ -114,6 +117,10 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
 
     const base = entity['base'];
     if (base) {
+      if (base.owner && typeof base.owner === 'object') {
+        base.owner = base.owner.id;
+      }
+
       response = {
         ...response,
         ...base,
@@ -123,13 +130,16 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     return response;
   };
 
-  protected bodyToEntity(body: B): T {
-    return body as any as T;
+  protected bodyToEntity(user: IUser, body: B): Promise<Partial<T>> {
+    return Promise.resolve(body as any as T);
   }
 
   protected hasPermission(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     user: IUser,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type: 'findOne' | 'findAll' | 'create' | 'update' | 'delete',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     id?: any
   ): boolean {
     return true;

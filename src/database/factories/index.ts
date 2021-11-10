@@ -1,3 +1,3 @@
-export * from './PetFactory';
-export * from './UserFactory';
 export * from './ClientFactory';
+export * from './ColorFactory';
+export * from './UserFactory';

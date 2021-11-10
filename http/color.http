@@ -16,59 +16,81 @@ Content-Type: application/json
   client.global.set("auth_token", response.body.token);
 %}
 
-### Create a client
+### Create an invalid color - red too big
 
-POST {{api}}/client
+POST {{api}}/color
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "Test"
+  "name": "Test",
+  "red": 256,
+  "green": 100,
+  "blue": 100
+}
+
+> {%
+  client.test("Request error", function() {
+    client.assert(response.status === 400, "Response status is not 400");
+  });
+%}
+
+### Create a color
+
+POST {{api}}/color
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "red": 100,
+  "green": 100,
+  "blue": 100
 }
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.global.set('client', response.body.id);
+  client.global.set('color', response.body.id);
 %}
 
-### Get the created client
+### Get the created color
 
-GET {{api}}/client/{{client}}
+GET {{api}}/color/{{color}}
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client id is right", function() {
-    client.assert(Number(response.body.id) === Number(client.global.get('client')));
+  client.test("Color id is right", function() {
+    client.assert(Number(response.body.id) === Number(client.global.get('color')));
   });
 %}
 
-### Get all clients
+### Get all colors
 
-GET {{api}}/client
+GET {{api}}/color
 Authorization: Bearer {{auth_token}}
 
 > {%
   client.test("Request executed successfully", function() {
     client.assert(response.status === 200, "Response status is not 200");
   });
-  client.test("Client is in response", function() {
+  client.test("Color is in response", function() {
     client.assert(response.body.items.filter(function(item) {
-      return Number(item.id) === Number(client.global.get('client'))
+      return Number(item.id) === Number(client.global.get('color'))
     }).length === 1);
   });
-  client.test("Client is first item", function() {
-    client.assert(Number(response.body.items[0].id) === Number(client.global.get('client')));
+  client.test("Color is first item", function() {
+    client.assert(Number(response.body.items[0].id) === Number(client.global.get('color')));
   });
 %}
 
-### Delete the created client
+### Delete the created color
 
-DELETE {{api}}/client/{{client}}
+DELETE {{api}}/color/{{color}}
 Authorization: Bearer {{auth_token}}
 
 > {%
@@ -77,9 +99,9 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Get the deleted client
+### Get the deleted color
 
-GET {{api}}/client/{{client}}
+GET {{api}}/color/{{color}}
 Authorization: Bearer {{auth_token}}
 
 > {%

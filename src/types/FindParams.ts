@@ -1,6 +1,6 @@
 import { IsOptional, IsPositive, Matches } from 'class-validator';
-import { IEntity } from './IEntity';
-import { IUser } from './IUser';
+import { IEntity } from './domain/IEntity';
+import { IUser } from './domain/IUser';
 
 export abstract class FindParams<T extends IEntity> {
   @IsOptional()

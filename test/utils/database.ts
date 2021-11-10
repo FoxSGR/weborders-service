@@ -30,6 +30,4 @@ export const migrateDatabase = async (connection: Connection) => {
   return connection.runMigrations();
 };
 
-export const closeDatabase = (connection: Connection) => {
-  return connection.close();
-};
+export const closeDatabase = (connection: Connection) => connection.close();

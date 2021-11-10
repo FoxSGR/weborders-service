@@ -2,7 +2,7 @@ import { Validate } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { countries } from './countries';
 import { EntityBase } from './base/EntityBase';
-import { IAddress } from '../../types/IAddress';
+import { IAddress } from '../../types';
 
 @Entity()
 export class Address implements IAddress {

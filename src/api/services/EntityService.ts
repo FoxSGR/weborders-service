@@ -1,11 +1,8 @@
 import { Repository } from 'typeorm';
+import { NotFoundError } from 'routing-controllers';
 
 import { EventDispatcherInterface } from '../../decorators/EventDispatcher';
-import { FindParams } from '../../types/FindParams';
-import { IEntity } from '../../types/IEntity';
-import { Page } from '../../types/Page';
-import { IUser } from '../../types/IUser';
-import { NotFoundError } from 'routing-controllers';
+import { FindParams, Id, IEntity, IUser, Page } from '../../types';
 
 interface EntityServiceConfig {
   owned: boolean;
@@ -15,16 +12,18 @@ const defaultConfig: EntityServiceConfig = {
   owned: true,
 };
 
-export abstract class EntityService<T extends IEntity> {
+export class EntityService<T extends IEntity> {
   private get config(): EntityServiceConfig {
     return this._config;
   }
+
   private set config(value: EntityServiceConfig) {
     this._config = { ...defaultConfig, ...value };
   }
+
   private _config: EntityServiceConfig;
 
-  protected constructor(
+  constructor(
     protected repository: Repository<T>,
     protected eventDispatcher: EventDispatcherInterface,
     config: EntityServiceConfig = defaultConfig
@@ -49,7 +48,7 @@ export abstract class EntityService<T extends IEntity> {
     });
 
     if (this.config.owned) {
-      entities.forEach((entity) => (entity['base'].owner = params.owner.id));
+      entities.forEach((entity) => (entity['base'].owner = params.owner));
     }
 
     return {
@@ -59,7 +58,7 @@ export abstract class EntityService<T extends IEntity> {
     };
   }
 
-  async findOne(id: any, user: IUser): Promise<T | undefined> {
+  async findOne(id: Id, user: IUser): Promise<T | undefined> {
     const entity = await this.repository.findOne(id, {
       where: this.config.owned ? { base: { owner: user } } : undefined,
     });
@@ -69,34 +68,33 @@ export abstract class EntityService<T extends IEntity> {
     }
 
     if (this.config.owned) {
-      entity['base'].owner = user.id;
+      entity['base'].owner = user;
     }
 
     return entity;
   }
 
-  create(entity: T, user?: IUser): Promise<T> {
+  create(entity: Partial<T>, user?: IUser): Promise<T> {
     if (this.config.owned) {
       entity['base'] = { owner: user };
     }
 
-    return this.repository.save(entity);
+    return this.repository.save(entity as any);
   }
 
-  async update(id: any, entity: T, user?: IUser): Promise<T> {
+  async update(id: Id, entity: T, user?: IUser): Promise<T> {
     const found = await this.findOne(id, user);
     if (!found) {
       return undefined;
     }
 
-    entity = {
+    return this.repository.save({
       ...found,
       ...entity,
-    };
-    return this.repository.save(entity);
+    } as any);
   }
 
-  async delete(id: any, user: IUser): Promise<T> {
+  async delete(id: Id, user: IUser): Promise<T> {
     const entity = await this.findOne(id, user);
     if (!entity) {
       throw new NotFoundError();

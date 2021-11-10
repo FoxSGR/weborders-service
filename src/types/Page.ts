@@ -1,6 +1,4 @@
-import { IEntity } from './IEntity';
-
-export class Page<T extends IEntity> {
+export class Page<T> {
   total: number;
   offset: number;
   items: T[];

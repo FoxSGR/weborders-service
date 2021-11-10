@@ -9,10 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { IUser } from '../../types/IUser';
 import { Client } from './Client';
 import { EntityBase } from './base/EntityBase';
-import { Role, roles } from '../../types/roles';
+import { IUser, Role, roles } from '../../types';
 
 @Entity()
 export class User implements IUser {
