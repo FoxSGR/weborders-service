@@ -6,13 +6,7 @@ import { IShoeModel, IUser } from '../../types';
 import { ShoeModelResponse } from './responses/ShoeModelResponse';
 import { ShoeModelBody } from './requests/ShoeModelBody';
 import { ShoeModelMapper } from '../transformers/ShoeModelMapper';
-import {
-  BrandService,
-  ClientService,
-  ComponentService,
-  ShoeModelService,
-} from '../services';
-import { Brand, Client } from '../models';
+import { ComponentService, ShoeModelService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -24,8 +18,6 @@ export class ShoeModelController extends EntityController<
 > {
   constructor(
     service: ShoeModelService,
-    private brandService: BrandService,
-    private clientService: ClientService,
     private componentService: ComponentService
   ) {
     super();
@@ -37,15 +29,15 @@ export class ShoeModelController extends EntityController<
     user: IUser,
     body: ShoeModelBody
   ): Promise<Partial<IShoeModel>> {
-    let client: Client;
-    if (body.client) {
-      client = await this.clientService.findOne(body.client, user, true);
-    }
-
-    let brand: Brand;
-    if (body.brand) {
-      brand = await this.brandService.findOne(body.brand, user, true);
-    }
+    // let client: Client;
+    // if (body.client) {
+    //   client = await this.clientService.findOne(body.client, user, true);
+    // }
+    //
+    // let brand: Brand;
+    // if (body.brand) {
+    //   brand = await this.brandService.findOne(body.brand, user, true);
+    // }
 
     const components = await this.componentService.findByIds(
       { owner: user },
@@ -54,8 +46,6 @@ export class ShoeModelController extends EntityController<
 
     return {
       reference: body.reference,
-      client,
-      brand,
       components,
       dateDelivery: body.dateDelivery,
       dateAsked: body.dateAsked,

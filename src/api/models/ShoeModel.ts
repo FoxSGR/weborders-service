@@ -3,28 +3,21 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { IShoeModel } from '../../types';
 import { OwnedEntity } from './base/OwnedEntity';
-import { Brand } from './Brand';
-import { Client } from './Client';
 import { Component } from './Component';
 
 @Entity()
+@Unique(['reference', 'base.owner'])
 export class ShoeModel implements IShoeModel {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ default: null })
   reference?: string;
-
-  @ManyToOne(() => Brand, { nullable: true })
-  brand?: Brand;
-
-  @ManyToOne(() => Client, { nullable: true })
-  client?: Client;
 
   @ManyToMany(() => Component, { lazy: true })
   @JoinTable()
@@ -35,6 +28,9 @@ export class ShoeModel implements IShoeModel {
 
   @Column({ default: null })
   dateDelivery?: Date;
+
+  @Column({ default: null })
+  notes?: string;
 
   @Column(() => OwnedEntity, { prefix: '' })
   base: OwnedEntity;

@@ -8,14 +8,6 @@ export class ShoeModelBody {
 
   @IsOptional()
   @IsNumber()
-  brand?: Id;
-
-  @IsOptional()
-  @IsNumber()
-  client?: Id;
-
-  @IsOptional()
-  @IsNumber()
   components: Id[];
 
   @IsOptional()
