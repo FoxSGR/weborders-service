@@ -6,17 +6,20 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { IShoeModel, ShoeModelType } from '../../types';
+import { Validate } from 'class-validator';
+
+import { IShoeModel, ShoeModelType, shoeModelTypes } from '../../types';
 import { OwnedEntity } from './base/OwnedEntity';
 import { Component } from './Component';
 
 @Entity()
-@Unique(['reference', 'base.owner'])
+@Unique(['reference', 'owner'])
 export class ShoeModel implements IShoeModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'varchar' })
+  @Validate((type) => shoeModelTypes.includes(type))
   type: ShoeModelType;
 
   @Column({ default: null })
