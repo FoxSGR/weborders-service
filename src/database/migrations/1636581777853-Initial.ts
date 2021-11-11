@@ -1,0 +1,50 @@
+import {MigrationInterface, QueryRunner} from "typeorm";
+
+export class Initial1636581777853 implements MigrationInterface {
+    name = 'Initial1636581777853'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE \`address\` (\`id\` int NOT NULL AUTO_INCREMENT, \`line1\` varchar(255) NULL, \`line2\` varchar(255) NULL, \`city\` varchar(255) NULL, \`zipCode\` varchar(255) NULL, \`country\` varchar(255) NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`client\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(255) NOT NULL, \`phoneNumber\` varchar(255) NULL, \`vat\` varchar(255) NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`user\` (\`id\` int NOT NULL AUTO_INCREMENT, \`first_name\` varchar(255) NOT NULL, \`last_name\` varchar(255) NOT NULL, \`email\` varchar(255) NOT NULL, \`username\` varchar(255) NOT NULL, \`password\` varchar(255) NOT NULL, \`roles\` text NOT NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`brand\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(255) NOT NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`color\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(255) NOT NULL, \`red\` int(3) NULL, \`green\` int(3) NULL, \`blue\` int(3) NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`component\` (\`id\` int NOT NULL AUTO_INCREMENT, \`type\` enum ('last', 'heel', 'sole', 'productionInsole', 'finishInsole', 'backCounter', 'laces', 'frontlet', 'lining', 'zip', 'leather', 'ornament') NULL, \`name\` varchar(255) NOT NULL, \`amount\` int NULL, \`colorId\` int NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`shoe_model\` (\`id\` int NOT NULL AUTO_INCREMENT, \`reference\` varchar(255) NULL, \`dateAsked\` datetime NULL, \`dateDelivery\` datetime NULL, \`brandId\` int NULL, \`clientId\` int NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`shoe_model_components_component\` (\`shoeModelId\` int NOT NULL, \`componentId\` int NOT NULL, INDEX \`IDX_e545d340c795a9c15e1e3661f7\` (\`shoeModelId\`), INDEX \`IDX_1a27e16ae0b9949c17c3f91053\` (\`componentId\`), PRIMARY KEY (\`shoeModelId\`, \`componentId\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`ALTER TABLE \`client\` ADD CONSTRAINT \`FK_ff81e27ae9e24835645c6e0c5ed\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`brand\` ADD CONSTRAINT \`FK_8a6b045926c158b885a9c8b5833\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`color\` ADD CONSTRAINT \`FK_03649c5b99d8943a1c43e7545a1\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`component\` ADD CONSTRAINT \`FK_1065b1dce9ca0df62f703235eb4\` FOREIGN KEY (\`colorId\`) REFERENCES \`color\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`component\` ADD CONSTRAINT \`FK_579e3e277e001f4e837cdf406e8\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` ADD CONSTRAINT \`FK_e6a1f33a048cd2b3efcbfecaf3f\` FOREIGN KEY (\`brandId\`) REFERENCES \`brand\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` ADD CONSTRAINT \`FK_de484518261cb8ecec74aaeba09\` FOREIGN KEY (\`clientId\`) REFERENCES \`client\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` ADD CONSTRAINT \`FK_3d1347ae5112b0039779c728744\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_model_components_component\` ADD CONSTRAINT \`FK_e545d340c795a9c15e1e3661f7c\` FOREIGN KEY (\`shoeModelId\`) REFERENCES \`shoe_model\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`);
+        await queryRunner.query(`ALTER TABLE \`shoe_model_components_component\` ADD CONSTRAINT \`FK_1a27e16ae0b9949c17c3f910531\` FOREIGN KEY (\`componentId\`) REFERENCES \`component\`(\`id\`) ON DELETE CASCADE ON UPDATE CASCADE`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`shoe_model_components_component\` DROP FOREIGN KEY \`FK_1a27e16ae0b9949c17c3f910531\``);
+        await queryRunner.query(`ALTER TABLE \`shoe_model_components_component\` DROP FOREIGN KEY \`FK_e545d340c795a9c15e1e3661f7c\``);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` DROP FOREIGN KEY \`FK_3d1347ae5112b0039779c728744\``);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` DROP FOREIGN KEY \`FK_de484518261cb8ecec74aaeba09\``);
+        await queryRunner.query(`ALTER TABLE \`shoe_model\` DROP FOREIGN KEY \`FK_e6a1f33a048cd2b3efcbfecaf3f\``);
+        await queryRunner.query(`ALTER TABLE \`component\` DROP FOREIGN KEY \`FK_579e3e277e001f4e837cdf406e8\``);
+        await queryRunner.query(`ALTER TABLE \`component\` DROP FOREIGN KEY \`FK_1065b1dce9ca0df62f703235eb4\``);
+        await queryRunner.query(`ALTER TABLE \`color\` DROP FOREIGN KEY \`FK_03649c5b99d8943a1c43e7545a1\``);
+        await queryRunner.query(`ALTER TABLE \`brand\` DROP FOREIGN KEY \`FK_8a6b045926c158b885a9c8b5833\``);
+        await queryRunner.query(`ALTER TABLE \`client\` DROP FOREIGN KEY \`FK_ff81e27ae9e24835645c6e0c5ed\``);
+        await queryRunner.query(`DROP INDEX \`IDX_1a27e16ae0b9949c17c3f91053\` ON \`shoe_model_components_component\``);
+        await queryRunner.query(`DROP INDEX \`IDX_e545d340c795a9c15e1e3661f7\` ON \`shoe_model_components_component\``);
+        await queryRunner.query(`DROP TABLE \`shoe_model_components_component\``);
+        await queryRunner.query(`DROP TABLE \`shoe_model\``);
+        await queryRunner.query(`DROP TABLE \`component\``);
+        await queryRunner.query(`DROP TABLE \`color\``);
+        await queryRunner.query(`DROP TABLE \`brand\``);
+        await queryRunner.query(`DROP TABLE \`user\``);
+        await queryRunner.query(`DROP TABLE \`client\``);
+        await queryRunner.query(`DROP TABLE \`address\``);
+    }
+
+}

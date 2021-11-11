@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { IShoeModel } from '../../types';
+import { IShoeModel, ShoeModelType } from '../../types';
 import { OwnedEntity } from './base/OwnedEntity';
 import { Component } from './Component';
 
@@ -15,6 +15,9 @@ import { Component } from './Component';
 export class ShoeModel implements IShoeModel {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  type: ShoeModelType;
 
   @Column({ default: null })
   reference?: string;

@@ -1,7 +1,12 @@
 import { IEntity } from './IEntity';
 import { IComponent } from './IComponent';
 
+export const shoeModelTypes = ['base', 'sample', 'order'] as const;
+export type ShoeModelType = typeof shoeModelTypes[number];
+
 export interface IShoeModel extends IEntity {
+  type: ShoeModelType;
+
   reference?: string;
 
   // TODO: photos
