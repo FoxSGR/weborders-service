@@ -10,7 +10,7 @@ import { ComponentService, ShoeModelService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
-@JsonController('/component')
+@JsonController('/shoe-model')
 export class ShoeModelController extends EntityController<
   IShoeModel,
   ShoeModelResponse,
