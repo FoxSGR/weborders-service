@@ -15,6 +15,9 @@ export class ShoeModelService extends EntityService<ShoeModel> {
     @InjectRepository() repository: ShoeModelRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher, { name: 'shoe_model' });
+    super(repository, eventDispatcher, {
+      name: 'shoe_model',
+      relations: ['components'],
+    });
   }
 }

@@ -18,8 +18,8 @@ export class ShoeModel implements IShoeModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar' })
   @Validate((type) => shoeModelTypes.includes(type))
+  @Column({ type: 'enum', enum: shoeModelTypes })
   type: ShoeModelType;
 
   @Column({ default: null })
@@ -27,7 +27,7 @@ export class ShoeModel implements IShoeModel {
 
   @ManyToMany(() => Component, { lazy: true })
   @JoinTable()
-  components: Component[];
+  components: Promise<Component[]>;
 
   @Column({ default: null })
   dateAsked?: Date;

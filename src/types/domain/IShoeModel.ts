@@ -17,7 +17,7 @@ export interface IShoeModel extends IEntity {
   // brand?: IBrand;
   // client?: IClient;
 
-  components: IComponent[];
+  components: IComponent[] | Promise<IComponent[]>;
 
   // TODO: box - just for order
 

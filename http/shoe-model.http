@@ -16,17 +16,26 @@ Content-Type: application/json
   client.global.set("auth_token", response.body.token);
 %}
 
-### Create a shoe-model
+### Create a shoe model
 
 POST {{api}}/shoe-model
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "name": "Test"
+  "name": "Test",
+  "type": "",
+  "components": []
 }
 
-### Get the created shoe-model
+> {%
+  client.test("Request executed successfully", function() {
+    client.assert(response.status === 200, "Response status is not 200");
+  });
+  client.global.set('shoe-model', response.body.id);
+%}
+
+### Get the created shoe model
 
 GET {{api}}/shoe-model/{{shoe-model}}
 Authorization: Bearer {{auth_token}}
@@ -40,7 +49,7 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Get all shoe-models
+### Get all shoe models
 
 GET {{api}}/shoe-model
 Authorization: Bearer {{auth_token}}
@@ -59,7 +68,7 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Delete the created shoe-model
+### Delete the created shoe model
 
 DELETE {{api}}/shoe-model/{{shoe-model}}
 Authorization: Bearer {{auth_token}}
@@ -70,7 +79,7 @@ Authorization: Bearer {{auth_token}}
   });
 %}
 
-### Get the deleted shoe-model
+### Get the deleted shoe model
 
 GET {{api}}/shoe-model/{{shoe-model}}
 Authorization: Bearer {{auth_token}}
