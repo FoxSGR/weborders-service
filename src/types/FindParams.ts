@@ -1,4 +1,4 @@
-import { IsOptional, IsPositive, Matches } from 'class-validator';
+import { IsBoolean, IsOptional, IsPositive, Matches } from 'class-validator';
 import { IEntity } from './domain/IEntity';
 import { IUser } from './domain/IUser';
 
@@ -7,11 +7,15 @@ export abstract class FindParams<T extends IEntity> {
   owner: IUser;
 
   @IsOptional()
+  @IsBoolean()
+  loadRelations?: boolean;
+
+  @IsOptional()
   sortField?: keyof T;
 
   @IsOptional()
-  @Matches(/^(asc|desc)$/)
-  sortDirection?: 'asc' | 'desc';
+  @Matches(/^(asc|desc)$/i)
+  sortDirection?: 'asc' | 'desc' | 'ASC' | 'DESC';
 
   @IsOptional()
   @IsPositive()

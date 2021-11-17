@@ -11,9 +11,11 @@ export class ShoeModelMapper implements Mapper<IShoeModel, ShoeModelResponse> {
       id: shoeModel.id,
       type: shoeModel.type,
       reference: shoeModel.reference,
-      components: shoeModel.components.map((component) =>
-        componentMapper.toResponse(component)
-      ),
+      components: Array.isArray(shoeModel.components)
+        ? shoeModel.components.map((component) =>
+            componentMapper.toResponse(component)
+          )
+        : undefined,
       dateAsked: shoeModel.dateAsked,
       dateDelivery: shoeModel.dateDelivery,
       notes: shoeModel.notes,

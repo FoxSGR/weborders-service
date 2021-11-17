@@ -7,11 +7,13 @@ import { FindParams, Id, IEntity, IUser, Page } from '../../types';
 interface EntityServiceConfig {
   name: string;
   owned?: boolean;
+  relations?: string[];
 }
 
 const defaultConfig: EntityServiceConfig = {
   name: 'unknown_entity',
   owned: true,
+  relations: undefined,
 };
 
 export class EntityService<T extends IEntity> {
@@ -38,7 +40,7 @@ export class EntityService<T extends IEntity> {
       this.buildFindOptions(params)
     );
 
-    this.setupFoundEntities(entities, params.owner);
+    await this.setupFoundEntities(entities, params);
     return {
       offset: params.offset,
       items: entities,
@@ -52,7 +54,7 @@ export class EntityService<T extends IEntity> {
       this.buildFindOptions(params)
     );
 
-    this.setupFoundEntities(entities, params.owner);
+    await this.setupFoundEntities(entities, params);
     return entities;
   }
 
@@ -61,9 +63,10 @@ export class EntityService<T extends IEntity> {
     user: IUser,
     required: boolean = false
   ): Promise<T | undefined> {
+    const params: FindParams<T> = { owner: user, loadRelations: true };
     const entity = await this.repository.findOne(
       id,
-      this.buildFindOptions({ owner: user })
+      this.buildFindOptions(params)
     );
 
     if (!entity) {
@@ -74,7 +77,7 @@ export class EntityService<T extends IEntity> {
       return entity;
     }
 
-    this.setupFoundEntities([entity], user);
+    await this.setupFoundEntities([entity], params);
     return entity;
   }
 
@@ -111,12 +114,17 @@ export class EntityService<T extends IEntity> {
   private buildFindOptions(params: FindParams<T>): any {
     const order: any = {};
     if (!params.sortField) {
-      order['id'] = params.sortDirection || 'desc';
+      order['id'] = params.sortDirection || 'DESC';
     } else {
-      order[params.sortField] = params.sortField || 'asc';
+      order[params.sortField] = params.sortField || 'ASC';
+    }
+
+    for (const key of Object.keys(order)) {
+      order[key] = order[key].toLocaleUpperCase();
     }
 
     return {
+      relations: params.loadRelations ? this.config.relations : undefined,
       withDeleted: false,
       skip: params.offset,
       take: params.limit || 50,
@@ -129,9 +137,20 @@ export class EntityService<T extends IEntity> {
     return this.config.owned ? { base: { owner } } : undefined;
   }
 
-  private setupFoundEntities(entities: T[], owner: IUser): void {
-    if (this.config.owned) {
-      entities.forEach((entity) => (entity['base'].owner = owner));
+  private async setupFoundEntities(
+    entities: T[],
+    params: FindParams<T>
+  ): Promise<void> {
+    for (const entity of entities) {
+      if (this.config.owned) {
+        entity['base'].owner = params.owner;
+      }
+
+      if (params.loadRelations) {
+        for (const relation of this.config.relations) {
+          entity[relation] = await entity[relation];
+        }
+      }
     }
   }
 }
