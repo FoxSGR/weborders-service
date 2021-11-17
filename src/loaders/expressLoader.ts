@@ -9,6 +9,14 @@ import { authorizationChecker } from '../auth/authorizationChecker';
 import { currentUserChecker } from '../auth/currentUserChecker';
 import { env } from '../env';
 
+export const expressDefaults = {
+  nullResultCode: 404,
+  undefinedResultCode: 404,
+  paramOptions: {
+    required: true
+  }
+}
+
 export const expressLoader: MicroframeworkLoader = (
   settings: MicroframeworkSettings | undefined
 ) => {
@@ -25,6 +33,7 @@ export const expressLoader: MicroframeworkLoader = (
       validation: true,
       routePrefix: env.app.routePrefix,
       defaultErrorHandler: false,
+      defaults: expressDefaults,
       /**
        * We can add options about how routing-controllers should configure itself.
        * Here we specify what controllers should be registered in our express server.

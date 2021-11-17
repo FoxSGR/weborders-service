@@ -10,6 +10,7 @@ import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUi from 'swagger-ui-express';
 
 import { env } from '../env';
+import { expressDefaults } from './expressLoader';
 
 export const swaggerLoader: MicroframeworkLoader = (
   settings: MicroframeworkSettings | undefined
@@ -24,7 +25,7 @@ export const swaggerLoader: MicroframeworkLoader = (
 
     const swaggerFile = routingControllersToSpec(
       getMetadataArgsStorage(),
-      {},
+      { defaults: expressDefaults },
       {
         components: {
           schemas,

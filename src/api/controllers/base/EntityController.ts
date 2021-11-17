@@ -1,33 +1,12 @@
-import {
-  Body,
-  Controller,
-  CurrentUser,
-  Delete,
-  ForbiddenError,
-  Get,
-  MethodNotAllowedError,
-  OnUndefined,
-  Param,
-  Post,
-  QueryParams,
-} from 'routing-controllers';
+import { ForbiddenError } from 'routing-controllers';
 import { FindParams, Id, IEntity, IUser, Page } from '../../../types';
 import { EntityService } from '../../services';
 import { Mapper } from '../../transformers/Mapper';
 
-interface EntityControllerConfig {
-  create?: boolean;
-  update?: boolean;
-  delete?: boolean;
-}
+interface EntityControllerConfig {}
 
-const defaultConfig: EntityControllerConfig = {
-  create: true,
-  update: true,
-  delete: true,
-};
+const defaultConfig: EntityControllerConfig = {};
 
-@Controller()
 export abstract class EntityController<T extends IEntity, U, B = any> {
   protected service: EntityService<T>;
   protected mapper: Mapper<T, U>;
@@ -42,12 +21,7 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
 
   private _config = defaultConfig;
 
-  @Get('/:id([0-9]+)')
-  @OnUndefined(404)
-  public async findOne(
-    @CurrentUser() user: IUser,
-    @Param('id') id: Id
-  ): Promise<U | undefined> {
+  public async findOne(user: IUser, id: Id): Promise<U | undefined> {
     if (!this.hasPermission(user, 'findOne', id)) {
       throw new ForbiddenError();
     }
@@ -60,10 +34,9 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     }
   }
 
-  @Get()
   public async find(
-    @CurrentUser() user: IUser,
-    @QueryParams() params: FindParams<T> = { owner: user }
+    user: IUser,
+    params: FindParams<T> = { owner: user }
   ): Promise<Page<U>> {
     if (!this.hasPermission(user, 'findAll')) {
       throw new ForbiddenError();
@@ -78,14 +51,8 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     };
   }
 
-  @Post()
-  public async create(
-    @CurrentUser() user: IUser,
-    @Body({ required: true }) body: B
-  ): Promise<U> {
-    if (!this.config.create) {
-      throw new MethodNotAllowedError();
-    } else if (!this.hasPermission(user, 'create')) {
+  public async create(user: IUser, body: B): Promise<U> {
+    if (!this.hasPermission(user, 'create')) {
       throw new ForbiddenError();
     }
 
@@ -97,14 +64,8 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     return this.toResponse(entity);
   }
 
-  @Delete('/:id')
-  public async delete(
-    @CurrentUser() user: IUser,
-    @Param('id') id: Id
-  ): Promise<U> {
-    if (!this.config.delete) {
-      throw new MethodNotAllowedError();
-    } else if (!this.hasPermission(user, 'delete', id)) {
+  public async delete(user: IUser, id: Id): Promise<U> {
+    if (!this.hasPermission(user, 'delete', id)) {
       throw new ForbiddenError();
     }
 

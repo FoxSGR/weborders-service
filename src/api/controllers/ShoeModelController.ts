@@ -1,8 +1,18 @@
-import { Authorized, JsonController } from 'routing-controllers';
+import {
+  Authorized,
+  Body,
+  CurrentUser,
+  Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  QueryParams,
+} from 'routing-controllers';
 import { OpenAPI } from 'routing-controllers-openapi';
 
 import { EntityController } from './base/EntityController';
-import { IShoeModel, IUser } from '../../types';
+import { FindParams, IShoeModel, Id, IUser, Page } from '../../types';
 import { ShoeModelResponse } from './responses/ShoeModelResponse';
 import { ShoeModelBody } from './requests/ShoeModelBody';
 import { ShoeModelMapper } from '../transformers/ShoeModelMapper';
@@ -25,6 +35,38 @@ export class ShoeModelController extends EntityController<
     this.mapper = new ShoeModelMapper();
   }
 
+  @Get('/:id([0-9]+)')
+  public async findOne(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id
+  ): Promise<ShoeModelResponse | undefined> {
+    return super.findOne(user, id);
+  }
+
+  @Get()
+  public async find(
+    @CurrentUser() user: IUser,
+    @QueryParams() params?: FindParams<IShoeModel>
+  ): Promise<Page<ShoeModelResponse>> {
+    return super.find(user, params);
+  }
+
+  @Post()
+  public async create(
+    @CurrentUser() user: IUser,
+    @Body() body: ShoeModelBody
+  ): Promise<ShoeModelResponse> {
+    return super.create(user, body);
+  }
+
+  @Delete('/:id([0-9]+)')
+  public async delete(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id
+  ): Promise<ShoeModelResponse> {
+    return super.delete(user, id);
+  }
+
   protected async bodyToEntity(
     user: IUser,
     body: ShoeModelBody
@@ -34,7 +76,7 @@ export class ShoeModelController extends EntityController<
     //   client = await this.clientService.findOne(body.client, user, true);
     // }
     //
-    // let brand: Brand;
+    // let brand: ShoeModel;
     // if (body.brand) {
     //   brand = await this.brandService.findOne(body.brand, user, true);
     // }
