@@ -88,7 +88,7 @@ export class EntityService<T extends IEntity> {
       entity['base'] = { owner: user } as any;
     }
 
-    return this.repository.save(entity as any) as Promise<T>;
+    return this.repository.save(entity as any, { reload: true }) as Promise<T>;
   }
 
   async update(id: Id, entity: T, user?: IUser): Promise<T> {

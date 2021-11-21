@@ -25,9 +25,9 @@ export class ShoeModel implements IShoeModel {
   @Column({ default: null })
   reference?: string;
 
-  @ManyToMany(() => Component, { lazy: true, cascade: true })
+  @ManyToMany(() => Component, { cascade: false })
   @JoinTable()
-  components: Promise<Component[]>;
+  components: Component[];
 
   @Column({ default: null })
   dateCreated?: Date;

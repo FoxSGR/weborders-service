@@ -10,7 +10,7 @@ define(Component, (faker: typeof Faker) => {
     componentTypes[faker.random.number(componentTypes.length - 1)];
   component.color = faker.random.boolean()
     ? ({
-        id: faker.random.number(9),
+        id: faker.random.number(9) + 1,
       } as any)
     : undefined;
   component.amount = faker.random.boolean()
