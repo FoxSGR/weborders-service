@@ -89,8 +89,7 @@ export class ShoeModelController extends EntityController<
     return {
       reference: body.reference,
       components,
-      dateDelivery: body.dateDelivery,
-      dateAsked: body.dateAsked,
+      dateCreated: body.dateCreated,
       notes: body.notes,
     };
   }

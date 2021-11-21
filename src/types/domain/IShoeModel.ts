@@ -21,8 +21,7 @@ export interface IShoeModel extends IEntity {
 
   // TODO: box - just for order
 
-  dateAsked?: Date;
-  dateDelivery?: Date;
+  dateCreated?: Date;
 
   notes?: string;
 }

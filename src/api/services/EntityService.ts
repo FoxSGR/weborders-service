@@ -8,12 +8,14 @@ interface EntityServiceConfig {
   name: string;
   owned?: boolean;
   relations?: string[];
+  cache: boolean;
 }
 
 const defaultConfig: EntityServiceConfig = {
   name: 'unknown_entity',
   owned: true,
   relations: undefined,
+  cache: false,
 };
 
 export class EntityService<T extends IEntity> {
@@ -21,7 +23,7 @@ export class EntityService<T extends IEntity> {
     return this._config;
   }
 
-  private set config(value: EntityServiceConfig) {
+  private set config(value: Partial<EntityServiceConfig>) {
     this._config = { ...defaultConfig, ...value };
   }
 
@@ -30,7 +32,7 @@ export class EntityService<T extends IEntity> {
   constructor(
     protected repository: Repository<T>,
     protected eventDispatcher: EventDispatcherInterface,
-    config: EntityServiceConfig
+    config: Partial<EntityServiceConfig>,
   ) {
     this.config = config;
   }
@@ -83,10 +85,10 @@ export class EntityService<T extends IEntity> {
 
   create(entity: Partial<T>, user?: IUser): Promise<T> {
     if (this.config.owned) {
-      entity['base'] = { owner: user };
+      entity['base'] = { owner: user } as any;
     }
 
-    return this.repository.save(entity as any);
+    return this.repository.save(entity as any) as Promise<T>;
   }
 
   async update(id: Id, entity: T, user?: IUser): Promise<T> {
@@ -98,7 +100,7 @@ export class EntityService<T extends IEntity> {
     return this.repository.save({
       ...found,
       ...entity,
-    } as any);
+    } as any) as any;
   }
 
   async delete(id: Id, user: IUser): Promise<T> {
@@ -130,6 +132,7 @@ export class EntityService<T extends IEntity> {
       take: params.limit || 50,
       where: this.buildWhere(params.owner),
       order,
+      cache: this.config.cache,
     };
   }
 
@@ -146,7 +149,7 @@ export class EntityService<T extends IEntity> {
         entity['base'].owner = params.owner;
       }
 
-      if (params.loadRelations) {
+      if (params.loadRelations && this.config.relations) {
         for (const relation of this.config.relations) {
           entity[relation] = await entity[relation];
         }

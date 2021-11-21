@@ -1,7 +1,7 @@
 import * as Faker from 'faker';
 import { define } from 'typeorm-seeding';
 
-import { User } from '../../../src/api/models/User';
+import { User } from '../../api/models';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 define(User, (faker: typeof Faker, settings: { role: string }) => {

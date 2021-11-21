@@ -14,11 +14,12 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
 
   constructor(@Logger(__filename) private log: LoggerInterface) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   error(
     error: HttpError,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     req: express.Request,
     res: express.Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     next: express.NextFunction
   ): void {
     console.log(error);

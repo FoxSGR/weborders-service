@@ -16,8 +16,7 @@ export class ShoeModelMapper implements Mapper<IShoeModel, ShoeModelResponse> {
             componentMapper.toResponse(component)
           )
         : undefined,
-      dateAsked: shoeModel.dateAsked,
-      dateDelivery: shoeModel.dateDelivery,
+      dateCreated: shoeModel.dateCreated,
       notes: shoeModel.notes,
     };
   }

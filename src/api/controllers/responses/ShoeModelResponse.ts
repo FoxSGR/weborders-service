@@ -6,7 +6,6 @@ export class ShoeModelResponse {
   type: ShoeModelType;
   reference: string;
   components?: ComponentResponse[];
-  dateAsked: Date;
-  dateDelivery: Date;
+  dateCreated: Date;
   notes: string;
 }

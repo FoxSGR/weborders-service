@@ -1,11 +1,10 @@
 import * as Faker from 'faker';
-import { Address } from '../../api/models/Address';
-import { Client } from '../../api/models/Client';
+import { Address, Client } from '../../api/models';
 import { define } from 'typeorm-seeding';
 
 define(Client, (faker: typeof Faker) => {
   const client = new Client();
-  client.name = faker.name.firstName();
+  client.name = faker.name.firstName() + ' ' + faker.name.lastName();
   client.vat = faker.random.uuid();
   client.phoneNumber = faker.phone.phoneNumber();
 

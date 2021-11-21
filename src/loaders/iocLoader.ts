@@ -7,8 +7,8 @@ import { useContainer as routingUseContainer } from 'routing-controllers';
 import { useContainer as ormUseContainer } from 'typeorm';
 import { Container } from 'typeorm-typedi-extensions';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const iocLoader: MicroframeworkLoader = (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   settings: MicroframeworkSettings | undefined
 ) => {
   /**

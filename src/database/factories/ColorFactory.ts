@@ -1,6 +1,6 @@
 import * as Faker from 'faker';
 import { define } from 'typeorm-seeding';
-import { Color } from '../../api/models/Color';
+import { Color } from '../../api/models';
 
 define(Color, (faker: typeof Faker) => {
   const color = new Color();

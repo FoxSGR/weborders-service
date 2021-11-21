@@ -1,22 +1,23 @@
 import { Id } from '../../../types';
-import { IsDate, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsOptional,
+  Validate,
+} from 'class-validator';
 
 export class ShoeModelBody {
   @IsOptional()
   @IsNotEmpty()
   reference?: string;
 
-  @IsOptional()
-  @IsNumber()
+  @IsNotEmpty()
+  @Validate((id) => typeof id === 'number')
   components: Id[];
 
   @IsOptional()
   @IsDate()
-  dateAsked?: Date;
-
-  @IsOptional()
-  @IsDate()
-  dateDelivery?: Date;
+  dateCreated?: Date;
 
   @IsOptional()
   @IsNotEmpty()

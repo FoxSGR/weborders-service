@@ -21,6 +21,7 @@ export function authorizationChecker(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return async function innerAuthorizationChecker(
     action: Action,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     roles: string[]
   ): Promise<boolean> {
     const authHeader: string = action.request.get('Authorization');

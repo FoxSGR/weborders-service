@@ -12,7 +12,7 @@ export class Component implements IComponent {
 
   @IsNotEmpty()
   @Validate((type) => componentTypes.includes(type))
-  @Column({ type: 'enum', enum: componentTypes, default: null })
+  @Column({ type: 'enum', enum: componentTypes })
   type: ComponentType;
 
   @IsNotEmpty()
@@ -23,7 +23,7 @@ export class Component implements IComponent {
   @Column({ default: null })
   amount?: number;
 
-  @ManyToOne(() => Color, { cascade: true, nullable: true })
+  @ManyToOne(() => Color, { cascade: false, nullable: true })
   color?: Color;
 
   @Column(() => OwnedEntity, { prefix: '' })
