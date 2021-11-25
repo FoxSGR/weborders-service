@@ -1,5 +1,5 @@
 import { ForbiddenError } from 'routing-controllers';
-import { FindParams, Id, IEntity, IUser, Page } from '../../../types';
+import { FindParams, Id, IEntity, IUser, Page, ResponseType } from '../../../types';
 import { EntityService } from '../../services';
 import { Mapper } from '../../transformers/Mapper';
 
@@ -7,9 +7,9 @@ interface EntityControllerConfig {}
 
 const defaultConfig: EntityControllerConfig = {};
 
-export abstract class EntityController<T extends IEntity, U, B = any> {
+export abstract class EntityController<T extends IEntity, U, B> {
   protected service: EntityService<T>;
-  protected mapper: Mapper<T, U>;
+  protected mapper: Mapper<T, U, B>;
 
   set config(value: EntityControllerConfig) {
     this._config = { ...defaultConfig, ...value };
@@ -28,7 +28,7 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
 
     const entity = await this.service.findOne(id, user);
     if (entity) {
-      return this.toResponse(entity);
+      return this.toResponse(entity, 'full');
     } else {
       return undefined;
     }
@@ -57,7 +57,21 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     }
 
     const entity = await this.service.create(
-      await this.bodyToEntity(user, body),
+      await this.mapper.bodyToEntity(body, user) as any,
+      user
+    );
+
+    return this.toResponse(entity);
+  }
+
+  public async update(user: IUser, id: number, body: Partial<B>): Promise<U> {
+    if (!this.hasPermission(user, 'update')) {
+      throw new ForbiddenError();
+    }
+
+    const entity = await this.service.update(
+      id,
+      await this.mapper.bodyToEntity(body, user) as any,
       user
     );
 
@@ -73,8 +87,8 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
     return this.toResponse(entity);
   }
 
-  protected readonly toResponse = (entity: T) => {
-    let response = this.mapper.toResponse(entity);
+  protected readonly toResponse = (entity: T, type?: ResponseType) => {
+    let response = this.mapper.entityToResponse(entity, type);
 
     const base = entity['base'];
     if (base) {
@@ -90,10 +104,6 @@ export abstract class EntityController<T extends IEntity, U, B = any> {
 
     return response;
   };
-
-  protected bodyToEntity(user: IUser, body: B): Promise<Partial<T>> {
-    return Promise.resolve(body as any as T);
-  }
 
   protected hasPermission(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

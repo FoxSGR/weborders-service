@@ -15,6 +15,9 @@ export class ComponentService extends EntityService<Component> {
     @InjectRepository() repository: ComponentRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher, { name: 'component' });
+    super(repository, eventDispatcher, {
+      name: 'component',
+      relations: ['color'],
+    });
   }
 }

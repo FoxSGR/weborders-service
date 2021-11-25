@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 
-import { User } from '../../api/models/User';
+import { User } from '../../api/models';
 
 export class CreateBruce implements Seeder {
   public async run(factory: Factory, connection: Connection): Promise<void> {

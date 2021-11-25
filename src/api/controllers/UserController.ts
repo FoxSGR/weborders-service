@@ -7,6 +7,7 @@ import {
   JsonController,
   Param,
   Post,
+  Put,
   QueryParams,
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
@@ -20,15 +21,19 @@ import { FindParams, hasPermission, Id, IUser, Page } from '../../types';
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/user')
-export class UserController extends EntityController<IUser, UserResponse> {
-  constructor(service: UserService) {
+export class UserController extends EntityController<
+  IUser,
+  UserResponse,
+  IUser
+> {
+  constructor(service: UserService, mapper: UserMapper) {
     super();
     this.service = service;
-    this.mapper = new UserMapper();
+    this.mapper = mapper;
   }
 
   @Get('/me')
-  @ResponseSchema(UserResponse, { isArray: true })
+  @ResponseSchema(UserResponse)
   public findMe(@CurrentUser() user: IUser): UserResponse {
     return this.toResponse(user);
   }
@@ -58,6 +63,16 @@ export class UserController extends EntityController<IUser, UserResponse> {
     @Body() body: IUser
   ): Promise<UserResponse> {
     return super.create(user, body);
+  }
+
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(UserResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<IUser>
+  ): Promise<UserResponse> {
+    return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')

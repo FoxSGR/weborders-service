@@ -1,5 +1,4 @@
 import { IEntity } from './IEntity';
-import { IColor } from './IColor';
 
 export const componentTypes = [
   'last',
@@ -22,5 +21,6 @@ export interface IComponent extends IEntity {
   type: ComponentType;
   name: string;
   amount?: number;
-  color?: IColor;
+  price?: number;
+  notes?: string;
 }

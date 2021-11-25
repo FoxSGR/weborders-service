@@ -63,7 +63,7 @@ export const env = {
     password: getOsEnvOptional('TYPEORM_PASSWORD'),
     database: getOsEnv('TYPEORM_DATABASE'),
     synchronize: toBool(getOsEnvOptional('TYPEORM_SYNCHRONIZE')),
-    logging: getOsEnv('TYPEORM_LOGGING'),
+    logging: true,
   },
   swagger: {
     enabled: toBool(getOsEnv('SWAGGER_ENABLED')),
@@ -79,5 +79,8 @@ export const env = {
   },
   auth: {
     secret: getOsEnv('JWT_SECRET'),
+  },
+  data: {
+    dir: getOsEnvOptional('DATA_DIR'),
   },
 };

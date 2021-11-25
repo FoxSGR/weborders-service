@@ -1,10 +1,18 @@
-import { Id, IUser, Role } from '../../../types';
+import { IsArray, IsInt, IsString } from 'class-validator';
 
-export class UserResponse implements Partial<IUser> {
+import { Id, Role } from '../../../types';
+
+export class UserResponse {
+  @IsInt()
   id: Id;
+  @IsString()
   firstName: string;
+  @IsString()
   lastName: string;
+  @IsString()
   email: string;
+  @IsString()
   username: string;
+  @IsArray()
   roles: Role[];
 }

@@ -7,9 +7,10 @@ import {
   JsonController,
   Param,
   Post,
+  Put,
   QueryParams,
 } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { EntityController } from './base/EntityController';
 import { FindParams, IBrand, Id, IUser, Page } from '../../types';
@@ -26,13 +27,14 @@ export class BrandController extends EntityController<
   BrandResponse,
   BrandBody
 > {
-  constructor(service: BrandService) {
+  constructor(service: BrandService, mapper: BrandMapper) {
     super();
-    this.mapper = new BrandMapper();
+    this.mapper = mapper;
     this.service = service;
   }
 
   @Get('/:id([0-9]+)')
+  @ResponseSchema(BrandResponse)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
@@ -41,6 +43,7 @@ export class BrandController extends EntityController<
   }
 
   @Get()
+  @ResponseSchema(Page)
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IBrand>
@@ -49,6 +52,7 @@ export class BrandController extends EntityController<
   }
 
   @Post()
+  @ResponseSchema(BrandResponse)
   public async create(
     @CurrentUser() user: IUser,
     @Body() body: BrandBody
@@ -56,7 +60,18 @@ export class BrandController extends EntityController<
     return super.create(user, body);
   }
 
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(BrandResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<BrandBody>
+  ): Promise<BrandResponse> {
+    return super.update(user, id, body);
+  }
+
   @Delete('/:id([0-9]+)')
+  @ResponseSchema(BrandResponse)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id

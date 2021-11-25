@@ -19,7 +19,7 @@ export const typeormLoader: MicroframeworkLoader = async (
     password: env.db.password,
     database: env.db.database,
     synchronize: env.db.synchronize,
-    logging: true,
+    logging: env.db.logging,
     entities: env.app.dirs.entities,
     migrations: env.app.dirs.migrations,
   });

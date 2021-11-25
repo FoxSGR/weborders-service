@@ -1,7 +1,8 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IBrand } from '../../types/domain/IBrand';
-import { OwnedEntity } from './base/OwnedEntity';
 import { IsNotEmpty, IsString } from 'class-validator';
+
+import { IBrand } from '../../types';
+import { OwnedEntity } from './base/OwnedEntity';
 
 @Entity()
 export class Brand implements IBrand {

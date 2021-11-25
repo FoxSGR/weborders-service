@@ -11,10 +11,17 @@ import { Client } from '../models';
 
 @Service()
 export class ClientService extends EntityService<Client> {
+  protected filterMapping = {
+    agentId: 'agent.id',
+  };
+
   constructor(
     @InjectRepository() repository: ClientRepository,
     @EventDispatcher() eventDispatcher: EventDispatcherInterface
   ) {
-    super(repository, eventDispatcher, { name: 'client' });
+    super(repository, eventDispatcher, {
+      name: 'client',
+      relations: ['address', 'agent'],
+    });
   }
 }

@@ -1,8 +1,9 @@
-import { Repository } from 'typeorm';
-import { NotFoundError } from 'routing-controllers';
+import { In, Repository } from 'typeorm';
+import { BadRequestError, HttpError, NotFoundError } from 'routing-controllers';
 
 import { EventDispatcherInterface } from '../../decorators/EventDispatcher';
 import { FindParams, Id, IEntity, IUser, Page } from '../../types';
+import _ from 'lodash';
 
 interface EntityServiceConfig {
   name: string;
@@ -29,10 +30,12 @@ export class EntityService<T extends IEntity> {
 
   private _config: EntityServiceConfig;
 
+  protected filterMapping: any = {};
+
   constructor(
     protected repository: Repository<T>,
     protected eventDispatcher: EventDispatcherInterface,
-    config: Partial<EntityServiceConfig>,
+    config: Partial<EntityServiceConfig>
   ) {
     this.config = config;
   }
@@ -50,6 +53,13 @@ export class EntityService<T extends IEntity> {
     };
   }
 
+  async findAll(params: FindParams<T>): Promise<T[]> {
+    const entities = await this.repository.find(this.buildFindOptions(params));
+
+    await this.setupFoundEntities(entities, params);
+    return entities;
+  }
+
   async findByIds(params: FindParams<T>, ids: Id[]): Promise<T[]> {
     const entities = await this.repository.findByIds(
       ids,
@@ -62,7 +72,7 @@ export class EntityService<T extends IEntity> {
 
   async findOne(
     id: Id,
-    user: IUser,
+    user?: IUser,
     required: boolean = false
   ): Promise<T | undefined> {
     const params: FindParams<T> = { owner: user, loadRelations: true };
@@ -83,19 +93,39 @@ export class EntityService<T extends IEntity> {
     return entity;
   }
 
-  create(entity: Partial<T>, user?: IUser): Promise<T> {
+  async create(entity: Partial<T>, user?: IUser): Promise<T> {
     if (this.config.owned) {
       entity['base'] = { owner: user } as any;
     }
 
-    return this.repository.save(entity as any, { reload: true }) as Promise<T>;
+    try {
+      const created = await this.repository.save(entity as any, {
+        reload: true,
+      });
+      await this.setupFoundEntities([created], {
+        owner: user,
+        loadRelations: true,
+      });
+      return created;
+    } catch (e: any) {
+      if (e.code === 'ER_DUP_ENTRY') {
+        throw new HttpError(409, 'duplicate');
+      } else {
+        throw e;
+      }
+    }
   }
 
-  async update(id: Id, entity: T, user?: IUser): Promise<T> {
+  async update(id: Id, entity: Partial<T>, user?: IUser): Promise<T> {
     const found = await this.findOne(id, user);
     if (!found) {
       return undefined;
     }
+
+    // delete undefined fields to merge with the existing entity
+    Object.keys(entity)
+      .filter((key) => entity[key] === undefined)
+      .forEach((key) => delete entity[key]);
 
     return this.repository.save({
       ...found,
@@ -111,6 +141,23 @@ export class EntityService<T extends IEntity> {
 
     await this.repository.softDelete(id);
     return entity;
+  }
+
+  protected async setupFoundEntities(
+    entities: T[],
+    params: FindParams<T>
+  ): Promise<void> {
+    for (const entity of entities) {
+      if (this.config.owned) {
+        entity['base'].owner = params.owner;
+      }
+
+      if (params.loadRelations && this.config.relations) {
+        for (const relation of this.config.relations) {
+          entity[relation] = await entity[relation];
+        }
+      }
+    }
   }
 
   private buildFindOptions(params: FindParams<T>): any {
@@ -130,30 +177,35 @@ export class EntityService<T extends IEntity> {
       withDeleted: false,
       skip: params.offset,
       take: params.limit || 50,
-      where: this.buildWhere(params.owner),
+      where: this.buildWhere(params),
       order,
       cache: this.config.cache,
     };
   }
 
-  private buildWhere(owner: IUser): any {
-    return this.config.owned ? { base: { owner } } : undefined;
-  }
+  private buildWhere(params: FindParams<T>): any {
+    const where: any = {};
 
-  private async setupFoundEntities(
-    entities: T[],
-    params: FindParams<T>
-  ): Promise<void> {
-    for (const entity of entities) {
-      if (this.config.owned) {
-        entity['base'].owner = params.owner;
-      }
+    if (this.config.owned) {
+      where.base = { owner: params.owner };
+    }
 
-      if (params.loadRelations && this.config.relations) {
-        for (const relation of this.config.relations) {
-          entity[relation] = await entity[relation];
+    if (params.filter) {
+      for (const key of Object.keys(params.filter)) {
+        const mapping = this.filterMapping[key];
+        if (!mapping) {
+          throw new BadRequestError(`Unrecognized filter '${key}'`);
         }
+
+        let value = params.filter[key];
+        if (Array.isArray(value)) {
+          value = In(value);
+        }
+
+        _.set(where, mapping, value);
       }
     }
+
+    return where;
   }
 }

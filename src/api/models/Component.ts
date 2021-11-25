@@ -1,8 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty, Min, Validate } from 'class-validator';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { IsNotEmpty, IsString, Min, Validate } from 'class-validator';
 
 import { OwnedEntity } from './base/OwnedEntity';
-import { Color } from './Color';
 import { ComponentType, componentTypes, IComponent } from '../../types';
 
 @Entity()
@@ -23,8 +22,13 @@ export class Component implements IComponent {
   @Column({ default: null })
   amount?: number;
 
-  @ManyToOne(() => Color, { cascade: false, nullable: true })
-  color?: Color;
+  @Min(0)
+  @Column({ default: null })
+  price?: number;
+
+  @IsString()
+  @Column({ default: '' })
+  notes?: string;
 
   @Column(() => OwnedEntity, { prefix: '' })
   base: OwnedEntity;

@@ -20,7 +20,7 @@ export class AuthController {
       const userMapper = new UserMapper();
       return {
         token: result.token,
-        user: userMapper.toResponse(result.user),
+        user: userMapper.entityToResponse(result.user),
       };
     } else {
       return result;

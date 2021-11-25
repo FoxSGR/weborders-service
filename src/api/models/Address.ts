@@ -1,5 +1,6 @@
-import { Validate } from 'class-validator';
+import { ValidateIf } from 'class-validator';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
 import { countries } from './countries';
 import { EntityBase } from './base/EntityBase';
 import { IAddress } from '../../types';
@@ -22,7 +23,7 @@ export class Address implements IAddress {
   zipCode: string;
 
   @Column({ default: null })
-  @Validate((country: string) => (country ? !!countries[country] : true))
+  @ValidateIf((country: string) => (country ? !!countries[country] : true))
   country: string;
 
   @Column(() => EntityBase, { prefix: '' })

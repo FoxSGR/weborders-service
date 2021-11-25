@@ -16,5 +16,9 @@ define(Client, (faker: typeof Faker) => {
 
   client.address = address;
 
+  client.base = {
+    owner: { id: 1 } as any,
+  } as any;
+
   return client;
 });

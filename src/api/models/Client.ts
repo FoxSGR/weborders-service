@@ -1,9 +1,17 @@
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  JoinColumn,
+} from 'typeorm';
 import { IsNotEmpty } from 'class-validator';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { IClient } from '../../types';
-import { Address } from './Address';
 import { OwnedEntity } from './base/OwnedEntity';
+import { Address } from './Address';
+import { Agent } from './Agent';
 
 @Entity()
 export class Client implements IClient {
@@ -15,13 +23,20 @@ export class Client implements IClient {
   name: string;
 
   @Column({ default: null })
-  phoneNumber: string;
+  phoneNumber?: string;
 
   @Column({ default: null })
-  vat: string;
+  vat?: string;
 
   @OneToOne(() => Address, { cascade: true })
+  @JoinColumn()
   address: Address;
+
+  @ManyToOne(() => Agent, { cascade: false })
+  agent: Agent;
+
+  @Column({ default: '' })
+  notes?: string;
 
   @Column(() => OwnedEntity, { prefix: '' })
   base: OwnedEntity;

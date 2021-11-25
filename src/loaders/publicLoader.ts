@@ -1,4 +1,6 @@
 import * as express from 'express';
+import { Application } from 'express';
+import { Container } from 'typedi';
 import {
   MicroframeworkLoader,
   MicroframeworkSettings,
@@ -6,15 +8,28 @@ import {
 import * as path from 'path';
 import favicon from 'serve-favicon';
 
+import { env } from '../env';
+
 export const publicLoader: MicroframeworkLoader = (
   settings: MicroframeworkSettings | undefined
 ) => {
   if (settings) {
-    const expressApp = settings.getData('express_app');
+    const dataDir = env.data.dir || path.join(__dirname, '..', 'data');
+    Container.set('dataDir', dataDir);
+
+    const expressApp: Application = settings.getData('express_app');
     expressApp
       // Serve static files like images from the public folder
       .use(
         express.static(path.join(__dirname, '..', 'public'), {
+          maxAge: 31557600000,
+        })
+      )
+
+      // Serve user resources
+      .use(
+        '/data',
+        express.static(dataDir, {
           maxAge: 31557600000,
         })
       )

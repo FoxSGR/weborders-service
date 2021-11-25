@@ -7,9 +7,10 @@ import {
   JsonController,
   Param,
   Post,
+  Put,
   QueryParams,
 } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { FindParams, IClient, Id, IUser, Page } from '../../types';
 import { EntityController } from './base/EntityController';
@@ -26,13 +27,14 @@ export class ClientController extends EntityController<
   ClientResponse,
   ClientBody
 > {
-  constructor(service: ClientService) {
+  constructor(service: ClientService, mapper: ClientMapper) {
     super();
-    this.mapper = new ClientMapper();
+    this.mapper = mapper;
     this.service = service;
   }
 
   @Get('/:id([0-9]+)')
+  @ResponseSchema(ClientResponse)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
@@ -41,6 +43,7 @@ export class ClientController extends EntityController<
   }
 
   @Get()
+  @ResponseSchema(Page)
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IClient>
@@ -49,6 +52,7 @@ export class ClientController extends EntityController<
   }
 
   @Post()
+  @ResponseSchema(ClientResponse)
   public async create(
     @CurrentUser() user: IUser,
     @Body() body: ClientBody
@@ -56,7 +60,18 @@ export class ClientController extends EntityController<
     return super.create(user, body);
   }
 
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(ClientResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<ClientBody>
+  ): Promise<ClientResponse> {
+    return super.update(user, id, body);
+  }
+
   @Delete('/:id([0-9]+)')
+  @ResponseSchema(ClientResponse)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id

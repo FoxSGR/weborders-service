@@ -7,16 +7,20 @@ import {
   JsonController,
   Param,
   Post,
+  Put,
   QueryParams,
+  UploadedFiles,
 } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
+import { Inject } from 'typedi';
+import fs from 'fs';
 
 import { EntityController } from './base/EntityController';
 import { FindParams, IShoeModel, Id, IUser, Page } from '../../types';
 import { ShoeModelResponse } from './responses/ShoeModelResponse';
 import { ShoeModelBody } from './requests/ShoeModelBody';
 import { ShoeModelMapper } from '../transformers/ShoeModelMapper';
-import { ComponentService, ShoeModelService } from '../services';
+import { ShoeModelService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -27,15 +31,17 @@ export class ShoeModelController extends EntityController<
   ShoeModelBody
 > {
   constructor(
+    @Inject('dataDir') private dataDir: string,
     service: ShoeModelService,
-    private componentService: ComponentService
+    mapper: ShoeModelMapper
   ) {
     super();
     this.service = service;
-    this.mapper = new ShoeModelMapper();
+    this.mapper = mapper;
   }
 
   @Get('/:id([0-9]+)')
+  @ResponseSchema(ShoeModelResponse)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
@@ -44,6 +50,7 @@ export class ShoeModelController extends EntityController<
   }
 
   @Get()
+  @ResponseSchema(Page)
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IShoeModel>
@@ -52,11 +59,22 @@ export class ShoeModelController extends EntityController<
   }
 
   @Post()
+  @ResponseSchema(ShoeModelResponse)
   public async create(
     @CurrentUser() user: IUser,
     @Body() body: ShoeModelBody
   ): Promise<ShoeModelResponse> {
     return super.create(user, body);
+  }
+
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(ShoeModelResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<ShoeModelBody>
+  ): Promise<ShoeModelResponse> {
+    return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')
@@ -67,30 +85,18 @@ export class ShoeModelController extends EntityController<
     return super.delete(user, id);
   }
 
-  protected async bodyToEntity(
-    user: IUser,
-    body: ShoeModelBody
-  ): Promise<Partial<IShoeModel>> {
-    // let client: Client;
-    // if (body.client) {
-    //   client = await this.clientService.findOne(body.client, user, true);
-    // }
-    //
-    // let brand: ShoeModel;
-    // if (body.brand) {
-    //   brand = await this.brandService.findOne(body.brand, user, true);
-    // }
-
-    const components = await this.componentService.findByIds(
-      { owner: user },
-      body.components
-    );
+  @Post('/:id([0-9]+)/photo')
+  async handleFileUpload(
+    @UploadedFiles('photos') photos: Express.Multer.File[],
+    @Param('id') id: Id
+  ): Promise<any> {
+    // TODO: validate model
+    for (const photo of photos) {
+      await fs.promises.writeFile(this.dataDir, photo.originalname);
+    }
 
     return {
-      reference: body.reference,
-      components,
-      dateCreated: body.dateCreated,
-      notes: body.notes,
+      status: 'OK',
     };
   }
 }

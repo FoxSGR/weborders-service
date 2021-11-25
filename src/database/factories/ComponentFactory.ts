@@ -8,11 +8,6 @@ define(Component, (faker: typeof Faker) => {
   component.name = faker.commerce.productName();
   component.type =
     componentTypes[faker.random.number(componentTypes.length - 1)];
-  component.color = faker.random.boolean()
-    ? ({
-        id: faker.random.number(9) + 1,
-      } as any)
-    : undefined;
   component.amount = faker.random.boolean()
     ? faker.random.number(20)
     : undefined;

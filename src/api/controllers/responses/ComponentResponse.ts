@@ -1,10 +1,18 @@
-import { ComponentType, IComponent, Id } from '../../../types';
-import { ColorResponse } from './ColorResponse';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
-export class ComponentResponse implements IComponent {
+import { ComponentType, Id } from '../../../types';
+
+export class ComponentResponse {
+  @IsInt()
   id: Id;
+  @IsString()
   name: string;
+  @IsString()
   type: ComponentType;
+  @IsOptional()
   amount?: number;
-  color?: ColorResponse;
+  @IsOptional()
+  price?: number;
+  @IsString()
+  notes?: string;
 }

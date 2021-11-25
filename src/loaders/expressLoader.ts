@@ -13,16 +13,14 @@ export const expressDefaults = {
   nullResultCode: 404,
   undefinedResultCode: 404,
   paramOptions: {
-    required: true
-  }
-}
+    required: true,
+  },
+};
 
 export const expressLoader: MicroframeworkLoader = (
   settings: MicroframeworkSettings | undefined
 ) => {
   if (settings) {
-    const connection = settings.getData('connection');
-
     /**
      * We create a new express server instance.
      * We could have also use useExpressServer here to attach controllers to an existing express instance.
@@ -45,8 +43,8 @@ export const expressLoader: MicroframeworkLoader = (
       /**
        * Authorization features
        */
-      authorizationChecker: authorizationChecker(connection),
-      currentUserChecker: currentUserChecker(connection),
+      authorizationChecker: authorizationChecker(),
+      currentUserChecker: currentUserChecker(),
     });
 
     // Run application to listen on given port

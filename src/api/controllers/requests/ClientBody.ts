@@ -1,41 +1,36 @@
 import {
   IsNotEmpty,
+  IsNotEmptyObject,
+  IsNumber,
   IsOptional,
   IsString,
-  MinLength,
-  Validate,
   ValidateNested,
 } from 'class-validator';
-import { IAddress, IClient } from '../../../types';
-import { DeepPartial } from 'typeorm';
-import { countries } from '../../models/countries';
+import { Type } from 'class-transformer';
 
-export class AddressBody implements Partial<IAddress> {
-  @IsOptional()
-  line1: string;
-  @IsOptional()
-  line2: string;
-  @IsOptional()
-  city: string;
-  @IsOptional()
-  @Validate((country: string) => (country ? !!countries[country] : true))
-  country: string;
-  @IsOptional()
-  zipCode: string;
-}
+import { AddressBody } from './AddressBody';
 
-export class ClientBody implements DeepPartial<IClient> {
+export class ClientBody {
   @IsNotEmpty()
+  @Type(() => String)
   name?: string;
 
-  @ValidateNested()
+  @IsNotEmptyObject()
+  @ValidateNested({ always: true })
+  @Type(() => AddressBody)
   address: AddressBody;
 
-  @MinLength(7)
   @IsOptional()
+  @Type(() => String)
   phoneNumber: string;
 
   @IsString()
   @IsOptional()
+  @Type(() => String)
   vat: string;
+
+  @IsNumber()
+  @IsOptional()
+  @Type(() => Number)
+  agent?: number;
 }

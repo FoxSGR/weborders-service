@@ -1,9 +1,20 @@
-import { IAddress, IClient, Id } from '../../../types';
+import { IsInt, IsOptional, IsString, ValidateNested } from 'class-validator';
 
-export abstract class ClientResponse implements Partial<IClient> {
+import { Id } from '../../../types';
+import { AddressResponse } from './AddressResponse';
+import { AgentResponse } from './AgentResponse';
+
+export abstract class ClientResponse {
+  @IsInt()
   id: Id;
+  @IsString()
   name: string;
-  phoneNumber: string;
-  vat: string;
-  address: IAddress;
+  @IsOptional()
+  phoneNumber?: string;
+  @IsOptional()
+  vat?: string;
+  @ValidateNested()
+  address: AddressResponse;
+  @ValidateNested()
+  agent?: AgentResponse;
 }

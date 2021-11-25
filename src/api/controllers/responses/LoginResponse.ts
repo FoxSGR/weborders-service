@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+
 import { UserResponse } from './UserResponse';
 
 export abstract class LoginResponse {

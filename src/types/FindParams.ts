@@ -24,4 +24,7 @@ export abstract class FindParams<T extends IEntity> {
   @IsOptional()
   @IsPositive()
   offset?: number;
+
+  @IsOptional()
+  filter?: { [key: string]: any };
 }

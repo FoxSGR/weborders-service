@@ -1,5 +1,16 @@
-import { Authorized, Body, CurrentUser, Delete, Get, JsonController, Param, Post, QueryParams } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import {
+  Authorized,
+  Body,
+  CurrentUser,
+  Delete,
+  Get,
+  JsonController,
+  Param,
+  Post,
+  Put,
+  QueryParams,
+} from 'routing-controllers';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { EntityController } from './base/EntityController';
 import { FindParams, IColor, Id, IUser, Page } from '../../types';
@@ -16,13 +27,14 @@ export class ColorController extends EntityController<
   ColorResponse,
   ColorBody
 > {
-  constructor(service: ColorService) {
+  constructor(service: ColorService, mapper: ColorMapper) {
     super();
-    this.mapper = new ColorMapper();
+    this.mapper = mapper;
     this.service = service;
   }
 
   @Get('/:id([0-9]+)')
+  @ResponseSchema(ColorResponse)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
@@ -31,6 +43,7 @@ export class ColorController extends EntityController<
   }
 
   @Get()
+  @ResponseSchema(Page)
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IColor>
@@ -39,6 +52,7 @@ export class ColorController extends EntityController<
   }
 
   @Post()
+  @ResponseSchema(ColorResponse)
   public async create(
     @CurrentUser() user: IUser,
     @Body() body: ColorBody
@@ -46,7 +60,18 @@ export class ColorController extends EntityController<
     return super.create(user, body);
   }
 
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(ColorResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<ColorBody>
+  ): Promise<ColorResponse> {
+    return super.update(user, id, body);
+  }
+
   @Delete('/:id([0-9]+)')
+  @ResponseSchema(ColorResponse)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id

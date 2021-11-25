@@ -1,6 +1,7 @@
-import { Client } from '../../api/models/Client';
 import { Connection } from 'typeorm';
 import { Factory, Seeder, times } from 'typeorm-seeding';
+
+import { Client } from '../../api/models';
 
 export class CreateClients implements Seeder {
   async run(factory: Factory, connection: Connection): Promise<void> {

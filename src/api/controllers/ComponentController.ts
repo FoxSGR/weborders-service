@@ -7,16 +7,17 @@ import {
   JsonController,
   Param,
   Post,
+  Put,
   QueryParams,
 } from 'routing-controllers';
-import { OpenAPI } from 'routing-controllers-openapi';
+import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { EntityController } from './base/EntityController';
-import { FindParams, IComponent, IColor, Id, IUser, Page } from '../../types';
+import { FindParams, IComponent, Id, IUser, Page } from '../../types';
 import { ComponentResponse } from './responses/ComponentResponse';
 import { ComponentBody } from './requests/ComponentBody';
 import { ComponentMapper } from '../transformers/ComponentMapper';
-import { ColorService, ComponentService } from '../services';
+import { ComponentService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
@@ -26,13 +27,14 @@ export class ComponentController extends EntityController<
   ComponentResponse,
   ComponentBody
 > {
-  constructor(service: ComponentService, private colorService: ColorService) {
+  constructor(service: ComponentService, mapper: ComponentMapper) {
     super();
     this.service = service;
-    this.mapper = new ComponentMapper();
+    this.mapper = mapper;
   }
 
   @Get('/:id([0-9]+)')
+  @ResponseSchema(ComponentResponse)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
@@ -41,6 +43,7 @@ export class ComponentController extends EntityController<
   }
 
   @Get()
+  @ResponseSchema(Page)
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IComponent>
@@ -49,6 +52,7 @@ export class ComponentController extends EntityController<
   }
 
   @Post()
+  @ResponseSchema(ComponentResponse)
   public async create(
     @CurrentUser() user: IUser,
     @Body() body: ComponentBody
@@ -56,28 +60,22 @@ export class ComponentController extends EntityController<
     return super.create(user, body);
   }
 
+  @Put('/:id([0-9]+)')
+  @ResponseSchema(ComponentResponse)
+  public async update(
+    @CurrentUser() user: IUser,
+    @Param('id') id: Id,
+    @Body() body: Partial<ComponentBody>
+  ): Promise<ComponentResponse> {
+    return super.update(user, id, body);
+  }
+
   @Delete('/:id([0-9]+)')
+  @ResponseSchema(ComponentResponse)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
   ): Promise<ComponentResponse> {
     return super.delete(user, id);
-  }
-
-  protected async bodyToEntity(
-    user: IUser,
-    body: ComponentBody
-  ): Promise<Partial<IComponent>> {
-    let color: IColor;
-    if (body.color) {
-      color = await this.colorService.findOne(body.color, user, true);
-    }
-
-    return {
-      name: body.name,
-      type: body.type,
-      amount: body.amount,
-      color,
-    };
   }
 }
