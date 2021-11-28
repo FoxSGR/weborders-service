@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class Initial1637799153370 implements MigrationInterface {
-    name = 'Initial1637799153370'
+export class Initial1638114783108 implements MigrationInterface {
+    name = 'Initial1638114783108'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`address\` (\`id\` int NOT NULL AUTO_INCREMENT, \`line1\` varchar(255) NULL, \`line2\` varchar(255) NULL, \`city\` varchar(255) NULL, \`zipCode\` varchar(255) NULL, \`country\` varchar(255) NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
@@ -14,6 +14,7 @@ export class Initial1637799153370 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE \`shoe_model_component\` (\`modelId\` int NOT NULL, \`componentId\` int NOT NULL, \`amount\` int NULL, \`price\` int NULL, \`notes\` varchar(255) NOT NULL DEFAULT '', \`colorId\` int NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`modelId\`, \`componentId\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`shoe_model\` (\`id\` int NOT NULL AUTO_INCREMENT, \`type\` enum ('base', 'sample', 'order') NOT NULL, \`reference\` varchar(255) NULL, \`photos\` text NOT NULL DEFAULT '[]', \`dateCreated\` datetime NULL, \`notes\` varchar(255) NOT NULL DEFAULT '', \`ownerId\` int NULL, \`seasonYear\` int NOT NULL, \`seasonSeasons\` enum ('fall_winter', 'spring_summer') NOT NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), UNIQUE INDEX \`IDX_58840e127d517ed1600b62f5ba\` (\`reference\`, \`ownerId\`, \`type\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`shoe_sample\` (\`id\` int NOT NULL AUTO_INCREMENT, \`dateAsked\` datetime NULL, \`dateDelivery\` datetime NULL, \`notes\` varchar(255) NOT NULL DEFAULT '', \`baseModelId\` int NULL, \`sampleModelId\` int NULL, \`clientId\` int NULL, \`agentId\` int NULL, \`brandId\` int NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), UNIQUE INDEX \`REL_5b88995272d9d97889820901b2\` (\`sampleModelId\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`shoe_order\` (\`id\` int NOT NULL AUTO_INCREMENT, \`dateAsked\` datetime NULL, \`dateDelivery\` datetime NULL, \`notes\` varchar(255) NOT NULL DEFAULT '', \`sizes\` text NOT NULL DEFAULT '{}', \`sampleId\` int NULL, \`ownerId\` int NULL, \`deletedAt\` timestamp(6) NULL, \`createdAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updatedAt\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`ALTER TABLE \`client\` ADD CONSTRAINT \`FK_6e6c7c79fbf5ab39520cd1723e2\` FOREIGN KEY (\`addressId\`) REFERENCES \`address\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`client\` ADD CONSTRAINT \`FK_626d76371510025cccd6c0ff75d\` FOREIGN KEY (\`agentId\`) REFERENCES \`agent\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`client\` ADD CONSTRAINT \`FK_ff81e27ae9e24835645c6e0c5ed\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -33,9 +34,13 @@ export class Initial1637799153370 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` ADD CONSTRAINT \`FK_14f8bbf9c9c78428532d057d306\` FOREIGN KEY (\`agentId\`) REFERENCES \`agent\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` ADD CONSTRAINT \`FK_9c5d2a1f773ea6ba2ccb1a763b9\` FOREIGN KEY (\`brandId\`) REFERENCES \`brand\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` ADD CONSTRAINT \`FK_958e06923d8b695d3913532c0d3\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_order\` ADD CONSTRAINT \`FK_5e66ad6b92581433ca1ceb67f0b\` FOREIGN KEY (\`sampleId\`) REFERENCES \`shoe_sample\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`shoe_order\` ADD CONSTRAINT \`FK_bc885faba8b3eef09d0cd44e23e\` FOREIGN KEY (\`ownerId\`) REFERENCES \`user\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`shoe_order\` DROP FOREIGN KEY \`FK_bc885faba8b3eef09d0cd44e23e\``);
+        await queryRunner.query(`ALTER TABLE \`shoe_order\` DROP FOREIGN KEY \`FK_5e66ad6b92581433ca1ceb67f0b\``);
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` DROP FOREIGN KEY \`FK_958e06923d8b695d3913532c0d3\``);
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` DROP FOREIGN KEY \`FK_9c5d2a1f773ea6ba2ccb1a763b9\``);
         await queryRunner.query(`ALTER TABLE \`shoe_sample\` DROP FOREIGN KEY \`FK_14f8bbf9c9c78428532d057d306\``);
@@ -55,6 +60,7 @@ export class Initial1637799153370 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`client\` DROP FOREIGN KEY \`FK_ff81e27ae9e24835645c6e0c5ed\``);
         await queryRunner.query(`ALTER TABLE \`client\` DROP FOREIGN KEY \`FK_626d76371510025cccd6c0ff75d\``);
         await queryRunner.query(`ALTER TABLE \`client\` DROP FOREIGN KEY \`FK_6e6c7c79fbf5ab39520cd1723e2\``);
+        await queryRunner.query(`DROP TABLE \`shoe_order\``);
         await queryRunner.query(`DROP INDEX \`REL_5b88995272d9d97889820901b2\` ON \`shoe_sample\``);
         await queryRunner.query(`DROP TABLE \`shoe_sample\``);
         await queryRunner.query(`DROP INDEX \`IDX_58840e127d517ed1600b62f5ba\` ON \`shoe_model\``);

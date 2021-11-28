@@ -6,5 +6,6 @@ export * from './ColorService';
 export * from './ComponentService';
 export * from './EntityService';
 export * from './ShoeModelService';
+export * from './ShoeOrderService';
 export * from './ShoeSampleService';
 export * from './UserService';

@@ -2,21 +2,26 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IShoeOrder, ShoeSizes } from '../../types';
 import { OwnedEntity } from './base/OwnedEntity';
 import { ShoeSample } from './ShoeSample';
+import { ShoeModel } from './ShoeModel';
 
 @Entity()
 export class ShoeOrder implements IShoeOrder {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => ShoeSample, { cascade: false })
+  @ManyToOne(() => ShoeSample, { cascade: false })
   @JoinColumn()
   sample: ShoeSample;
+
+  @ManyToOne(() => ShoeModel, { cascade: false, nullable: false })
+  @JoinColumn()
+  model: ShoeModel;
 
   @Column({ default: null })
   dateAsked?: Date;
