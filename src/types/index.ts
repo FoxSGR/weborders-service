@@ -14,6 +14,7 @@ export * from './domain/IPhoto';
 export * from './domain/ISeason';
 export * from './domain/IShoeModel';
 export * from './domain/IShoeModelComponent';
+export * from './domain/IShoeOrder';
 export * from './domain/IShoeSample';
 export * from './domain/IUser';
 

@@ -102,10 +102,12 @@ export class EntityService<T extends IEntity> {
       const created = await this.repository.save(entity as any, {
         reload: true,
       });
+
       await this.setupFoundEntities([created], {
         owner: user,
         loadRelations: true,
       });
+
       return created;
     } catch (e: any) {
       if (e.code === 'ER_DUP_ENTRY') {

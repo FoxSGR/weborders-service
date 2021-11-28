@@ -26,7 +26,6 @@ export class ShoeSample implements IShoeSample {
   @JoinColumn()
   sampleModel: ShoeModel;
 
-  // TODO: ADD INVERSE SIDE
   @ManyToOne(() => Client, { cascade: false })
   @JoinColumn()
   client?: Client;
