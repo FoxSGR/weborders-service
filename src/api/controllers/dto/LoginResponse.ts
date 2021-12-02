@@ -1,11 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
 
-import { UserResponse } from './UserResponse';
+import { UserDTO } from './UserDTO';
 
 export abstract class LoginResponse {
   @IsNotEmpty()
   token: string;
 
   @IsNotEmpty()
-  user: UserResponse;
+  user: UserDTO;
 }

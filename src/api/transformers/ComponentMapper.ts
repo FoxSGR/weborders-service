@@ -2,16 +2,11 @@ import { Service } from 'typedi';
 
 import { Mapper } from './Mapper';
 import { IComponent } from '../../types';
-import { ComponentResponse } from '../controllers/responses/ComponentResponse';
-import { ComponentBody } from '../controllers/requests/ComponentBody';
+import { ComponentDTO } from '../controllers/dto/ComponentDTO';
 
 @Service()
-export class ComponentMapper extends Mapper<
-  IComponent,
-  ComponentResponse,
-  ComponentBody
-> {
-  bodyToEntity(body: ComponentBody): Partial<IComponent> {
+export class ComponentMapper extends Mapper<IComponent, ComponentDTO> {
+  bodyToEntity(body: ComponentDTO): Partial<IComponent> {
     return {
       name: body.name,
       type: body.type,
@@ -21,7 +16,7 @@ export class ComponentMapper extends Mapper<
     };
   }
 
-  entityToResponse(component: IComponent): ComponentResponse {
+  entityToResponse(component: IComponent): ComponentDTO {
     return {
       id: component.id,
       name: component.name,

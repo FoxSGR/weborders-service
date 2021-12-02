@@ -3,13 +3,12 @@ import { DeepPartial } from 'typeorm';
 
 import { Mapper } from './Mapper';
 import { IAgent, IUser } from '../../types';
-import { AgentResponse } from '../controllers/responses/AgentResponse';
-import { AgentBody } from '../controllers/requests/AgentBody';
 import { ClientMapper } from './ClientMapper';
 import { AddressMapper } from './AddressMapper';
+import { AgentDTO } from '../controllers/dto/AgentDTO';
 
 @Service()
-export class AgentMapper extends Mapper<IAgent, AgentResponse, AgentBody> {
+export class AgentMapper extends Mapper<IAgent, AgentDTO> {
   constructor(
     private clientMapper: ClientMapper,
     private addressMapper: AddressMapper
@@ -17,7 +16,7 @@ export class AgentMapper extends Mapper<IAgent, AgentResponse, AgentBody> {
     super();
   }
 
-  bodyToEntity(body: AgentBody, user: IUser): DeepPartial<IAgent> {
+  bodyToEntity(body: AgentDTO, user: IUser): DeepPartial<IAgent> {
     return {
       name: body.name,
       phoneNumber: body.phoneNumber,
@@ -25,7 +24,7 @@ export class AgentMapper extends Mapper<IAgent, AgentResponse, AgentBody> {
     };
   }
 
-  entityToResponse(agent: IAgent): AgentResponse {
+  entityToResponse(agent: IAgent): AgentDTO {
     // prevent overflow
     agent.clients?.forEach((client) => delete client.agent);
 

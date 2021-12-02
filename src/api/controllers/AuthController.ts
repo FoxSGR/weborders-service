@@ -1,8 +1,8 @@
 import { Body, JsonController, Post } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { AuthService } from '../services';
-import { LoginBody } from './requests/LoginBody';
-import { LoginResponse } from './responses/LoginResponse';
+import { LoginBody } from './dto/LoginBody';
+import { LoginResponse } from './dto/LoginResponse';
 import { UserMapper } from '../transformers/UserMapper';
 
 @JsonController('/auth')

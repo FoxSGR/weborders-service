@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsPositive, Matches } from 'class-validator';
+import { IsBoolean, IsOptional, Matches, Min } from 'class-validator';
 import { IEntity } from './domain/IEntity';
 import { IUser } from './domain/IUser';
 
@@ -18,11 +18,11 @@ export abstract class FindParams<T extends IEntity> {
   sortDirection?: 'asc' | 'desc' | 'ASC' | 'DESC';
 
   @IsOptional()
-  @IsPositive()
+  @Min(0)
   limit?: number;
 
   @IsOptional()
-  @IsPositive()
+  @Min(0)
   offset?: number;
 
   @IsOptional()

@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 
-export class AddressResponse {
+export class AddressDTO {
   @IsOptional()
   line1: string;
   @IsOptional()

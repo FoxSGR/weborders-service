@@ -2,18 +2,17 @@ import { Service } from 'typedi';
 
 import { Mapper } from './Mapper';
 import { IBrand } from '../../types';
-import { BrandResponse } from '../controllers/responses/BrandResponse';
-import { BrandBody } from '../controllers/requests/BrandBody';
+import { BrandDTO } from '../controllers/dto/BrandDTO';
 
 @Service()
-export class BrandMapper extends Mapper<IBrand, BrandResponse, BrandBody> {
-  bodyToEntity(body: BrandBody): Partial<IBrand> {
+export class BrandMapper extends Mapper<IBrand, BrandDTO> {
+  bodyToEntity(body: BrandDTO): Partial<IBrand> {
     return {
       name: body.name,
     };
   }
 
-  entityToResponse(brand: IBrand): BrandResponse {
+  entityToResponse(brand: IBrand): BrandDTO {
     return {
       id: brand.id,
       name: brand.name,

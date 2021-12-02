@@ -12,10 +12,13 @@ import {
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
-import { EntityController } from './base/EntityController';
+import {
+  createBodyOptions,
+  EntityController,
+  updateBodyOptions,
+} from './base/EntityController';
 import { FindParams, IComponent, Id, IUser, Page } from '../../types';
-import { ComponentResponse } from './responses/ComponentResponse';
-import { ComponentBody } from './requests/ComponentBody';
+import { ComponentDTO } from './dto/ComponentDTO';
 import { ComponentMapper } from '../transformers/ComponentMapper';
 import { ComponentService } from '../services';
 
@@ -24,8 +27,7 @@ import { ComponentService } from '../services';
 @JsonController('/component')
 export class ComponentController extends EntityController<
   IComponent,
-  ComponentResponse,
-  ComponentBody
+  ComponentDTO
 > {
   constructor(service: ComponentService, mapper: ComponentMapper) {
     super();
@@ -34,11 +36,11 @@ export class ComponentController extends EntityController<
   }
 
   @Get('/:id([0-9]+)')
-  @ResponseSchema(ComponentResponse)
+  @ResponseSchema(ComponentDTO)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ComponentResponse | undefined> {
+  ): Promise<ComponentDTO | undefined> {
     return super.findOne(user, id);
   }
 
@@ -47,35 +49,35 @@ export class ComponentController extends EntityController<
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IComponent>
-  ): Promise<Page<ComponentResponse>> {
+  ): Promise<Page<ComponentDTO>> {
     return super.find(user, params);
   }
 
   @Post()
-  @ResponseSchema(ComponentResponse)
+  @ResponseSchema(ComponentDTO)
   public async create(
     @CurrentUser() user: IUser,
-    @Body() body: ComponentBody
-  ): Promise<ComponentResponse> {
+    @Body(createBodyOptions) body: ComponentDTO
+  ): Promise<ComponentDTO> {
     return super.create(user, body);
   }
 
   @Put('/:id([0-9]+)')
-  @ResponseSchema(ComponentResponse)
+  @ResponseSchema(ComponentDTO)
   public async update(
     @CurrentUser() user: IUser,
     @Param('id') id: Id,
-    @Body() body: Partial<ComponentBody>
-  ): Promise<ComponentResponse> {
+    @Body(updateBodyOptions) body: Partial<ComponentDTO>
+  ): Promise<ComponentDTO> {
     return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')
-  @ResponseSchema(ComponentResponse)
+  @ResponseSchema(ComponentDTO)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ComponentResponse> {
+  ): Promise<ComponentDTO> {
     return super.delete(user, id);
   }
 }

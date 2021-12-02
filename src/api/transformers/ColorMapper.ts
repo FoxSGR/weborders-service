@@ -2,12 +2,11 @@ import { Service } from 'typedi';
 
 import { Mapper } from './Mapper';
 import { IColor } from '../../types';
-import { ColorResponse } from '../controllers/responses/ColorResponse';
-import { ColorBody } from '../controllers/requests/ColorBody';
+import { ColorDTO } from '../controllers/dto/ColorDTO';
 
 @Service()
-export class ColorMapper extends Mapper<IColor, ColorResponse, ColorBody> {
-  bodyToEntity(body: ColorBody): Partial<IColor> {
+export class ColorMapper extends Mapper<IColor, ColorDTO> {
+  bodyToEntity(body: ColorDTO): Partial<IColor> {
     return {
       name: body.name,
       red: body.red,
@@ -16,7 +15,7 @@ export class ColorMapper extends Mapper<IColor, ColorResponse, ColorBody> {
     };
   }
 
-  entityToResponse(color: IColor): ColorResponse {
+  entityToResponse(color: IColor): ColorDTO {
     return {
       id: color.id,
       name: color.name,

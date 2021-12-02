@@ -12,21 +12,16 @@ import {
 } from 'routing-controllers';
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
-import { EntityController } from './base/EntityController';
+import { createBodyOptions, EntityController, updateBodyOptions } from './base/EntityController';
 import { FindParams, IBrand, Id, IUser, Page } from '../../types';
-import { BrandResponse } from './responses/BrandResponse';
-import { BrandBody } from './requests/BrandBody';
 import { BrandMapper } from '../transformers/BrandMapper';
 import { BrandService } from '../services';
+import { BrandDTO } from './dto/BrandDTO';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/brand')
-export class BrandController extends EntityController<
-  IBrand,
-  BrandResponse,
-  BrandBody
-> {
+export class BrandController extends EntityController<IBrand, BrandDTO> {
   constructor(service: BrandService, mapper: BrandMapper) {
     super();
     this.mapper = mapper;
@@ -34,11 +29,11 @@ export class BrandController extends EntityController<
   }
 
   @Get('/:id([0-9]+)')
-  @ResponseSchema(BrandResponse)
+  @ResponseSchema(BrandDTO)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<BrandResponse | undefined> {
+  ): Promise<BrandDTO | undefined> {
     return super.findOne(user, id);
   }
 
@@ -47,35 +42,35 @@ export class BrandController extends EntityController<
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IBrand>
-  ): Promise<Page<BrandResponse>> {
+  ): Promise<Page<BrandDTO>> {
     return super.find(user, params);
   }
 
   @Post()
-  @ResponseSchema(BrandResponse)
+  @ResponseSchema(BrandDTO)
   public async create(
     @CurrentUser() user: IUser,
-    @Body() body: BrandBody
-  ): Promise<BrandResponse> {
+    @Body(createBodyOptions) body: BrandDTO
+  ): Promise<BrandDTO> {
     return super.create(user, body);
   }
 
   @Put('/:id([0-9]+)')
-  @ResponseSchema(BrandResponse)
+  @ResponseSchema(BrandDTO)
   public async update(
     @CurrentUser() user: IUser,
     @Param('id') id: Id,
-    @Body() body: Partial<BrandBody>
-  ): Promise<BrandResponse> {
+    @Body(updateBodyOptions) body: Partial<BrandDTO>
+  ): Promise<BrandDTO> {
     return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')
-  @ResponseSchema(BrandResponse)
+  @ResponseSchema(BrandDTO)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<BrandResponse> {
+  ): Promise<BrandDTO> {
     return super.delete(user, id);
   }
 }

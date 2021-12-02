@@ -2,14 +2,13 @@ import { Service } from 'typedi';
 
 import { IClient, IUser, Promial } from '../../types';
 import { Mapper } from './Mapper';
-import { ClientResponse } from '../controllers/responses/ClientResponse';
-import { ClientBody } from '../controllers/requests/ClientBody';
+import { ClientDTO } from '../controllers/dto/ClientDTO';
 import { AddressMapper } from './AddressMapper';
 import { AgentMapper } from './AgentMapper';
 import { AgentService } from '../services';
 
 @Service()
-export class ClientMapper extends Mapper<IClient, ClientResponse, ClientBody> {
+export class ClientMapper extends Mapper<IClient, ClientDTO> {
   constructor(
     private addressMapper: AddressMapper,
     private agentService: AgentService
@@ -17,17 +16,17 @@ export class ClientMapper extends Mapper<IClient, ClientResponse, ClientBody> {
     super();
   }
 
-  async bodyToEntity(client: ClientBody, user: IUser): Promial<IClient> {
+  async bodyToEntity(client: ClientDTO, user: IUser): Promial<IClient> {
     return {
       name: client.name,
       vat: client.vat,
       phoneNumber: client.phoneNumber,
       address: this.fieldToEntity(this.addressMapper, user, client.address),
-      agent: await this.find(this.agentService, user, client.agent),
+      agent: await this.find(this.agentService, user, client.agent?.id),
     };
   }
 
-  entityToResponse(client: IClient): ClientResponse {
+  entityToResponse(client: IClient): ClientDTO {
     // no need to list the client's agents
     if (client.agent) {
       delete client.agent.clients;

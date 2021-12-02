@@ -3,13 +3,13 @@ import { DeepPartial } from 'typeorm';
 import { IUser, Promial, ResponseType } from '../../types';
 import { EntityService } from '../services';
 
-export abstract class Mapper<T, U, B> {
+export abstract class Mapper<T, D> {
   abstract bodyToEntity(
-    body: Partial<B>,
+    body: Partial<D>,
     user: IUser
   ): Promial<T> | DeepPartial<T>;
 
-  abstract entityToResponse(input: T, type?: ResponseType): U;
+  abstract entityToResponse(input: T, type?: ResponseType): D;
 
   protected async find(
     service: EntityService<any>,
@@ -24,7 +24,7 @@ export abstract class Mapper<T, U, B> {
   }
 
   protected fieldToResponse(
-    mapper: Mapper<any, any, any>,
+    mapper: Mapper<any, any>,
     data: any,
     type?: ResponseType
   ): any {
@@ -36,7 +36,7 @@ export abstract class Mapper<T, U, B> {
   }
 
   protected fieldToEntity(
-    mapper: Mapper<any, any, any>,
+    mapper: Mapper<any, any>,
     user: IUser,
     data: any
   ): any {
@@ -48,7 +48,7 @@ export abstract class Mapper<T, U, B> {
   }
 
   protected fieldToEntityAsync(
-    mapper: Mapper<any, any, any>,
+    mapper: Mapper<any, any>,
     user: IUser,
     data: any
   ): Promial<any> {

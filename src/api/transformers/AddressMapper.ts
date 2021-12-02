@@ -2,16 +2,11 @@ import { Service } from 'typedi';
 
 import { Mapper } from './Mapper';
 import { IAddress } from '../../types';
-import { AddressResponse } from '../controllers/responses/AddressResponse';
-import { AddressBody } from '../controllers/requests/AddressBody';
+import { AddressDTO } from '../controllers/dto/AddressDTO';
 
 @Service()
-export class AddressMapper extends Mapper<
-  IAddress,
-  AddressResponse,
-  AddressBody
-> {
-  bodyToEntity(body: AddressBody): Partial<IAddress> {
+export class AddressMapper extends Mapper<IAddress, AddressDTO> {
+  bodyToEntity(body: AddressDTO): Partial<IAddress> {
     return {
       line1: body.line1,
       line2: body.line2,
@@ -21,7 +16,7 @@ export class AddressMapper extends Mapper<
     };
   }
 
-  entityToResponse(input: IAddress): AddressResponse {
+  entityToResponse(input: IAddress): AddressDTO {
     return {
       line1: input.line1,
       line2: input.line2,

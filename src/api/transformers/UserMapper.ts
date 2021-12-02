@@ -2,11 +2,11 @@ import { Service } from 'typedi';
 
 import { Mapper } from './Mapper';
 import { IUser } from '../../types';
-import { UserResponse } from '../controllers/responses/UserResponse';
+import { UserDTO } from '../controllers/dto/UserDTO';
 
 @Service()
-export class UserMapper extends Mapper<IUser, UserResponse, IUser> {
-  entityToResponse(entity: IUser): UserResponse {
+export class UserMapper extends Mapper<IUser, UserDTO> {
+  entityToResponse(entity: IUser): UserDTO {
     return {
       id: entity.id,
       email: entity.email,
@@ -17,7 +17,7 @@ export class UserMapper extends Mapper<IUser, UserResponse, IUser> {
     };
   }
 
-  bodyToEntity(body: IUser): Partial<IUser> {
+  bodyToEntity(body: IUser): Partial<UserDTO> {
     return {
       firstName: body.firstName,
       lastName: body.lastName,

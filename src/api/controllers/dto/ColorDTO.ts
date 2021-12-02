@@ -1,32 +1,36 @@
-import { IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
-import { Column } from 'typeorm';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class ColorBody {
+import { Id } from '../../../types';
+
+export class ColorDTO {
+  @IsOptional()
+  id: Id;
+
   @IsNotEmpty()
   @IsString()
-  @Column()
+  @IsOptional({ groups: ['update'] })
   @Type(() => String)
   name: string;
 
-  @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(255)
+  @IsOptional()
   @Type(() => Number)
   red: number;
 
-  @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(255)
+  @IsOptional()
   @Type(() => Number)
   green: number;
 
-  @IsNotEmpty()
   @IsInt()
   @Min(0)
   @Max(255)
+  @IsOptional()
   @Type(() => Number)
   blue: number;
 }

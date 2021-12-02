@@ -1,5 +1,12 @@
-import { ForbiddenError } from 'routing-controllers';
-import { FindParams, Id, IEntity, IUser, Page, ResponseType } from '../../../types';
+import { BodyOptions, ForbiddenError } from 'routing-controllers';
+import {
+  FindParams,
+  Id,
+  IEntity,
+  IUser,
+  Page,
+  ResponseType,
+} from '../../../types';
 import { EntityService } from '../../services';
 import { Mapper } from '../../transformers/Mapper';
 
@@ -7,9 +14,20 @@ interface EntityControllerConfig {}
 
 const defaultConfig: EntityControllerConfig = {};
 
-export abstract class EntityController<T extends IEntity, U, B> {
+const createGroups = ['create'];
+const updateGroups = ['update'];
+export const createBodyOptions: BodyOptions = {
+  validate: { groups: createGroups },
+  required: true,
+};
+export const updateBodyOptions: BodyOptions = {
+  validate: { groups: updateGroups },
+  required: true,
+};
+
+export abstract class EntityController<T extends IEntity, D> {
   protected service: EntityService<T>;
-  protected mapper: Mapper<T, U, B>;
+  protected mapper: Mapper<T, D>;
 
   set config(value: EntityControllerConfig) {
     this._config = { ...defaultConfig, ...value };
@@ -21,7 +39,7 @@ export abstract class EntityController<T extends IEntity, U, B> {
 
   private _config = defaultConfig;
 
-  public async findOne(user: IUser, id: Id): Promise<U | undefined> {
+  public async findOne(user: IUser, id: Id): Promise<D | undefined> {
     if (!this.hasPermission(user, 'findOne', id)) {
       throw new ForbiddenError();
     }
@@ -37,7 +55,7 @@ export abstract class EntityController<T extends IEntity, U, B> {
   public async find(
     user: IUser,
     params: FindParams<T> = { owner: user }
-  ): Promise<Page<U>> {
+  ): Promise<Page<D>> {
     if (!this.hasPermission(user, 'findAll')) {
       throw new ForbiddenError();
     }
@@ -51,34 +69,34 @@ export abstract class EntityController<T extends IEntity, U, B> {
     };
   }
 
-  public async create(user: IUser, body: B): Promise<U> {
+  public async create(user: IUser, body: Partial<D>): Promise<D> {
     if (!this.hasPermission(user, 'create')) {
       throw new ForbiddenError();
     }
 
     const entity = await this.service.create(
-      await this.mapper.bodyToEntity(body, user) as any,
+      (await this.mapper.bodyToEntity(body, user)) as any,
       user
     );
 
     return this.toResponse(entity);
   }
 
-  public async update(user: IUser, id: number, body: Partial<B>): Promise<U> {
+  public async update(user: IUser, id: number, body: Partial<D>): Promise<D> {
     if (!this.hasPermission(user, 'update')) {
       throw new ForbiddenError();
     }
 
     const entity = await this.service.update(
       id,
-      await this.mapper.bodyToEntity(body, user) as any,
+      (await this.mapper.bodyToEntity(body, user)) as any,
       user
     );
 
     return this.toResponse(entity);
   }
 
-  public async delete(user: IUser, id: Id): Promise<U> {
+  public async delete(user: IUser, id: Id): Promise<D> {
     if (!this.hasPermission(user, 'delete', id)) {
       throw new ForbiddenError();
     }

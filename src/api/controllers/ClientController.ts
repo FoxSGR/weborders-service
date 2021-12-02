@@ -13,20 +13,15 @@ import {
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { FindParams, IClient, Id, IUser, Page } from '../../types';
-import { EntityController } from './base/EntityController';
-import { ClientResponse } from './responses/ClientResponse';
-import { ClientBody } from './requests/ClientBody';
+import { createBodyOptions, EntityController, updateBodyOptions } from './base/EntityController';
+import { ClientDTO } from './dto/ClientDTO';
 import { ClientMapper } from '../transformers/ClientMapper';
 import { ClientService } from '../services';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/client')
-export class ClientController extends EntityController<
-  IClient,
-  ClientResponse,
-  ClientBody
-> {
+export class ClientController extends EntityController<IClient, ClientDTO> {
   constructor(service: ClientService, mapper: ClientMapper) {
     super();
     this.mapper = mapper;
@@ -34,11 +29,11 @@ export class ClientController extends EntityController<
   }
 
   @Get('/:id([0-9]+)')
-  @ResponseSchema(ClientResponse)
+  @ResponseSchema(ClientDTO)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ClientResponse | undefined> {
+  ): Promise<ClientDTO | undefined> {
     return super.findOne(user, id);
   }
 
@@ -47,35 +42,35 @@ export class ClientController extends EntityController<
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IClient>
-  ): Promise<Page<ClientResponse>> {
+  ): Promise<Page<ClientDTO>> {
     return super.find(user, params);
   }
 
   @Post()
-  @ResponseSchema(ClientResponse)
+  @ResponseSchema(ClientDTO)
   public async create(
     @CurrentUser() user: IUser,
-    @Body() body: ClientBody
-  ): Promise<ClientResponse> {
+    @Body(createBodyOptions) body: ClientDTO
+  ): Promise<ClientDTO> {
     return super.create(user, body);
   }
 
   @Put('/:id([0-9]+)')
-  @ResponseSchema(ClientResponse)
+  @ResponseSchema(ClientDTO)
   public async update(
     @CurrentUser() user: IUser,
     @Param('id') id: Id,
-    @Body() body: Partial<ClientBody>
-  ): Promise<ClientResponse> {
+    @Body(updateBodyOptions) body: Partial<ClientDTO>
+  ): Promise<ClientDTO> {
     return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')
-  @ResponseSchema(ClientResponse)
+  @ResponseSchema(ClientDTO)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ClientResponse> {
+  ): Promise<ClientDTO> {
     return super.delete(user, id);
   }
 }

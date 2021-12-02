@@ -15,10 +15,13 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 import { Inject } from 'typedi';
 import fs from 'fs';
 
-import { EntityController } from './base/EntityController';
-import { FindParams, IShoeModel, Id, IUser, Page } from '../../types';
-import { ShoeModelResponse } from './responses/ShoeModelResponse';
-import { ShoeModelBody } from './requests/ShoeModelBody';
+import {
+  createBodyOptions,
+  EntityController,
+  updateBodyOptions,
+} from './base/EntityController';
+import { FindParams, Id, IShoeModel, IUser, Page } from '../../types';
+import { ShoeModelDTO } from './dto/ShoeModelDTO';
 import { ShoeModelMapper } from '../transformers/ShoeModelMapper';
 import { ShoeModelService } from '../services';
 
@@ -27,8 +30,7 @@ import { ShoeModelService } from '../services';
 @JsonController('/shoe-model')
 export class ShoeModelController extends EntityController<
   IShoeModel,
-  ShoeModelResponse,
-  ShoeModelBody
+  ShoeModelDTO
 > {
   constructor(
     @Inject('dataDir') private dataDir: string,
@@ -41,11 +43,11 @@ export class ShoeModelController extends EntityController<
   }
 
   @Get('/:id([0-9]+)')
-  @ResponseSchema(ShoeModelResponse)
+  @ResponseSchema(ShoeModelDTO)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ShoeModelResponse | undefined> {
+  ): Promise<ShoeModelDTO | undefined> {
     return super.findOne(user, id);
   }
 
@@ -54,26 +56,26 @@ export class ShoeModelController extends EntityController<
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IShoeModel>
-  ): Promise<Page<ShoeModelResponse>> {
+  ): Promise<Page<ShoeModelDTO>> {
     return super.find(user, params);
   }
 
   @Post()
-  @ResponseSchema(ShoeModelResponse)
+  @ResponseSchema(ShoeModelDTO)
   public async create(
     @CurrentUser() user: IUser,
-    @Body() body: ShoeModelBody
-  ): Promise<ShoeModelResponse> {
+    @Body(createBodyOptions) body: ShoeModelDTO
+  ): Promise<ShoeModelDTO> {
     return super.create(user, body);
   }
 
   @Put('/:id([0-9]+)')
-  @ResponseSchema(ShoeModelResponse)
+  @ResponseSchema(ShoeModelDTO)
   public async update(
     @CurrentUser() user: IUser,
     @Param('id') id: Id,
-    @Body() body: Partial<ShoeModelBody>
-  ): Promise<ShoeModelResponse> {
+    @Body(updateBodyOptions) body: Partial<ShoeModelDTO>
+  ): Promise<ShoeModelDTO> {
     return super.update(user, id, body);
   }
 
@@ -81,7 +83,7 @@ export class ShoeModelController extends EntityController<
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ShoeModelResponse> {
+  ): Promise<ShoeModelDTO> {
     return super.delete(user, id);
   }
 
