@@ -14,12 +14,12 @@ export class ShoeSampleDTO {
   @ValidateNested()
   @IsOptional({ groups: ['update'] })
   @Type(() => ShoeModelDTO)
-  baseModel: ShoeModelDTO;
+  baseModel?: ShoeModelDTO;
 
   @ValidateNested()
   @IsOptional({ groups: ['update'] })
   @Type(() => ShoeModelDTO)
-  sampleModel: ShoeModelDTO;
+  sampleModel?: ShoeModelDTO;
 
   @IsOptional()
   @ValidateNested()

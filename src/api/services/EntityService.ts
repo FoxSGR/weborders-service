@@ -48,6 +48,7 @@ export class EntityService<T extends IEntity> {
     await this.setupFoundEntities(entities, params);
     return {
       offset: params.offset,
+      size: params.limit,
       items: entities,
       total: count,
     };

@@ -29,6 +29,23 @@ export class ShoeSampleMapper extends Mapper<IShoeSample, ShoeSampleDTO> {
     super();
   }
 
+  async bodyToEntity(body: ShoeSampleDTO, user: IUser): Promial<IShoeSample> {
+    return {
+      baseModel: await this.find(this.modelService, user, body.baseModel?.id),
+      sampleModel: await this.fieldToEntityAsync(
+        this.modelMapper,
+        user,
+        body.sampleModel
+      ),
+      client: await this.find(this.clientService, user, body.client?.id),
+      agent: await this.find(this.agentService, user, body.agent?.id),
+      brand: await this.find(this.brandService, user, body.brand?.id),
+      dateAsked: body.dateAsked,
+      dateDelivery: body.dateDelivery,
+      notes: body.notes,
+    };
+  }
+
   entityToResponse(sample: IShoeSample, type?: ResponseType): ShoeSampleDTO {
     return {
       id: sample.id,
@@ -44,23 +61,6 @@ export class ShoeSampleMapper extends Mapper<IShoeSample, ShoeSampleDTO> {
       dateAsked: sample.dateAsked,
       dateDelivery: sample.dateDelivery,
       notes: sample.notes,
-    };
-  }
-
-  async bodyToEntity(body: ShoeSampleDTO, user: IUser): Promial<IShoeSample> {
-    return {
-      baseModel: await this.find(this.modelService, user, body.baseModel?.id),
-      sampleModel: await this.fieldToEntityAsync(
-        this.modelMapper,
-        user,
-        body.sampleModel
-      ),
-      client: await this.find(this.clientService, user, body.client?.id),
-      agent: await this.find(this.agentService, user, body.agent?.id),
-      brand: await this.find(this.brandService, user, body.brand?.id),
-      dateAsked: body.dateAsked,
-      dateDelivery: body.dateDelivery,
-      notes: body.notes,
     };
   }
 }

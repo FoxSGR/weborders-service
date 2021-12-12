@@ -5,7 +5,8 @@ import {
   Delete,
   Get,
   JsonController,
-  Param, Post,
+  Param,
+  Post,
   Put,
   QueryParams,
 } from 'routing-controllers';
@@ -13,19 +14,17 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi';
 
 import { EntityController } from './base/EntityController';
 import { FindParams, Id, IShoeOrder, IUser, Page } from '../../types';
-import { ShoeOrderBody } from './requests/ShoeOrderBody';
-import { ShoeOrderResponse } from './responses/ShoeOrderResponse';
 import { ShoeOrderService } from '../services';
 import { ShoeOrderMapper } from '../transformers/ShoeOrderMapper';
+import { ShoeOrderDTO } from './dto/ShoeOrderDTO';
 
 @Authorized()
 @OpenAPI({ security: [{ bearerAuth: [] }] })
 @JsonController('/shoe-order')
 export class ShoeOrderController extends EntityController<
   IShoeOrder,
-  ShoeOrderResponse,
-  ShoeOrderBody
-  > {
+  ShoeOrderDTO
+> {
   constructor(service: ShoeOrderService, mapper: ShoeOrderMapper) {
     super();
     this.service = service;
@@ -33,11 +32,11 @@ export class ShoeOrderController extends EntityController<
   }
 
   @Get('/:id([0-9]+)')
-  @ResponseSchema(ShoeOrderResponse)
+  @ResponseSchema(ShoeOrderDTO)
   public async findOne(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ShoeOrderResponse | undefined> {
+  ): Promise<ShoeOrderDTO | undefined> {
     return super.findOne(user, id);
   }
 
@@ -46,35 +45,35 @@ export class ShoeOrderController extends EntityController<
   public async find(
     @CurrentUser() user: IUser,
     @QueryParams() params?: FindParams<IShoeOrder>
-  ): Promise<Page<ShoeOrderResponse>> {
+  ): Promise<Page<ShoeOrderDTO>> {
     return super.find(user, params);
   }
 
   @Post()
-  @ResponseSchema(ShoeOrderResponse)
+  @ResponseSchema(ShoeOrderDTO)
   public async create(
     @CurrentUser() user: IUser,
-    @Body() body: ShoeOrderBody
-  ): Promise<ShoeOrderResponse> {
+    @Body() body: ShoeOrderDTO
+  ): Promise<ShoeOrderDTO> {
     return super.create(user, body);
   }
 
   @Put('/:id([0-9]+)')
-  @ResponseSchema(ShoeOrderResponse)
+  @ResponseSchema(ShoeOrderDTO)
   public async update(
     @CurrentUser() user: IUser,
     @Param('id') id: Id,
-    @Body() body: Partial<ShoeOrderBody>
-  ): Promise<ShoeOrderResponse> {
+    @Body() body: Partial<ShoeOrderDTO>
+  ): Promise<ShoeOrderDTO> {
     return super.update(user, id, body);
   }
 
   @Delete('/:id([0-9]+)')
-  @ResponseSchema(ShoeOrderResponse)
+  @ResponseSchema(ShoeOrderDTO)
   public async delete(
     @CurrentUser() user: IUser,
     @Param('id') id: Id
-  ): Promise<ShoeOrderResponse> {
+  ): Promise<ShoeOrderDTO> {
     return super.delete(user, id);
   }
 }

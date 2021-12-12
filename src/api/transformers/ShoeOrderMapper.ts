@@ -8,17 +8,12 @@ import {
   Promial,
   ResponseType,
 } from '../../types';
-import { ShoeOrderResponse } from '../controllers/responses/ShoeOrderResponse';
-import { ShoeOrderBody } from '../controllers/requests/ShoeOrderBody';
 import { ShoeSampleService } from '../services';
 import { ShoeSampleMapper } from './ShoeSampleMapper';
+import { ShoeOrderDTO } from '../controllers/dto/ShoeOrderDTO';
 
 @Service()
-export class ShoeOrderMapper extends Mapper<
-  IShoeOrder,
-  ShoeOrderResponse,
-  ShoeOrderBody
-> {
+export class ShoeOrderMapper extends Mapper<IShoeOrder, ShoeOrderDTO> {
   constructor(
     private sampleMapper: ShoeSampleMapper,
     private sampleService: ShoeSampleService
@@ -27,13 +22,13 @@ export class ShoeOrderMapper extends Mapper<
   }
 
   async bodyToEntity(
-    body: Partial<ShoeOrderBody>,
+    body: Partial<ShoeOrderDTO>,
     user: IUser
   ): Promial<IShoeOrder> {
     const sample: IShoeSample = await this.find(
       this.sampleService,
       user,
-      body.sample
+      body.sample?.id
     );
     return {
       sample,
@@ -45,7 +40,7 @@ export class ShoeOrderMapper extends Mapper<
     };
   }
 
-  entityToResponse(order: IShoeOrder, type?: ResponseType): ShoeOrderResponse {
+  entityToResponse(order: IShoeOrder, type?: ResponseType): ShoeOrderDTO {
     return {
       id: order.id,
       sample: this.fieldToResponse(this.sampleMapper, order.sample, type),
