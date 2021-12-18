@@ -23,7 +23,7 @@ import { ShoeSampleMapper } from '../transformers/ShoeSampleMapper';
 import { ShoeSampleDTO } from './dto/ShoeSampleDTO';
 
 @Authorized()
-@OpenAPI({ security: [{ bearerAuth: [] }] })
+@OpenAPI({})
 @JsonController('/shoe-sample')
 export class ShoeSampleController extends EntityController<
   IShoeSample,

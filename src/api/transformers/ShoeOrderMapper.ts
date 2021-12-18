@@ -30,6 +30,7 @@ export class ShoeOrderMapper extends Mapper<IShoeOrder, ShoeOrderDTO> {
       user,
       body.sample?.id
     );
+
     return {
       sample,
       model: sample?.sampleModel, // for now, the model is always the sample model

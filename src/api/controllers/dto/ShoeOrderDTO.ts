@@ -15,7 +15,7 @@ export class ShoeOrderDTO {
   id: Id;
 
   @ValidateNested()
-  @IsOptional()
+  @IsOptional({ groups: ['update'] })
   @Type(() => ShoeSampleDTO)
   sample: ShoeSampleDTO;
 
@@ -36,5 +36,5 @@ export class ShoeOrderDTO {
   @IsString()
   @IsOptional()
   @Type(() => String)
-  notes: string;
+  notes?: string;
 }

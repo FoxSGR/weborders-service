@@ -19,7 +19,7 @@ import { ShoeOrderMapper } from '../transformers/ShoeOrderMapper';
 import { ShoeOrderDTO } from './dto/ShoeOrderDTO';
 
 @Authorized()
-@OpenAPI({ security: [{ bearerAuth: [] }] })
+@OpenAPI({})
 @JsonController('/shoe-order')
 export class ShoeOrderController extends EntityController<
   IShoeOrder,
